@@ -1,0 +1,36 @@
+
+> agency-intake-site@0.1.0 dev
+> next dev
+
+
+[31m✘[39m node v22.20.0 is [31mnot yet supported[39m in the Community edition of [33mConsole Ninja[39m.
+We are working hard on it for you [36mhttps://tinyurl.com/3h9mtwra[39m.
+
+Estimated release dates:
+  - Community users: [36maround 23rd November, 2025 [1m(subject to team availability)[22m[39m
+[33m  - PRO users[39m:       [1m[32mpriority access is available now[39m[22m
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\eidan\package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * C:\Users\eidan\OneDrive\Escritorio\Agency-Intake-Site\agency-intake-site\package-lock.json
+   * C:\Users\eidan\OneDrive\Escritorio\Agency-Intake-Site\package-lock.json
+
+
+[31m✘[39m node v22.20.0 is [31mnot yet supported[39m in the Community edition of [33mConsole Ninja[39m.
+We are working hard on it for you [36mhttps://tinyurl.com/3h9mtwra[39m.
+
+Estimated release dates:
+  - Community users: [36maround 23rd November, 2025 [1m(subject to team availability)[22m[39m
+[33m  - PRO users[39m:       [1m[32mpriority access is available now[39m[22m
+
+   ▲ Next.js 15.5.0
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.61:3000
+
+ ✓ Starting...
+ ✓ Ready in 2.6s
+ ○ Compiling / ...
+ ✓ Compiled / in 6.5s (3930 modules)

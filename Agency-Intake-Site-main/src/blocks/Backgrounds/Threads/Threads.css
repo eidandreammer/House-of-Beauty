@@ -1,0 +1,16 @@
+/*
+	Installed from https://reactbits.dev/default/
+*/
+
+.threads-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .threads-container {
+    height: 220vh;
+    transform: translateY(-40vh);
+  }
+}

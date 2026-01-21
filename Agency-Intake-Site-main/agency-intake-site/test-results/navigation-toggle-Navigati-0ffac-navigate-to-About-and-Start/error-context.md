@@ -1,0 +1,76 @@
+# Page snapshot
+
+```yaml
+- button "Pill Nav"
+- button "Card Nav" [pressed]
+- button "Dock"
+- navigation:
+  - button "Open menu"
+  - img "Agency"
+  - link "Get Started":
+    - /url: /start/
+- main:
+  - heading "Transform Your Business with Fantastic Web Design" [level=1]
+  - paragraph: Get a custom website that converts visitors into customers. Modern, responsive designs that perfectly represent your brand and drive real business results.
+  - link "Start Your Project":
+    - /url: "#start-project"
+  - link "View Pricing":
+    - /url: "#pricing"
+  - text: "Background: Orb"
+  - img
+  - button "Previous background"
+  - button "Next background"
+  - text: Orb Galaxy Liquid Chrome Threads Prism Dark Veil
+  - heading "Start Your Project" [level=2]
+  - paragraph: Tell us about your business and vision. We'll create a custom website that perfectly represents your brand and drives results.
+  - text: 1 2 3
+  - heading "Business Info" [level=2]
+  - paragraph: Basic business details
+  - heading "Business Information" [level=2]
+  - text: Business Name *
+  - textbox "Please enter your business name (at least 2 characters)"
+  - paragraph: Enter your official business name
+  - text: Industry *
+  - combobox:
+    - option "Select your industry" [selected]
+    - option "Restaurant & Food Service"
+    - option "Healthcare & Medical"
+    - option "Legal Services"
+    - option "Real Estate"
+    - option "Retail & E-commerce"
+    - option "Professional Services"
+    - option "Beauty & Wellness"
+    - option "Automotive"
+    - option "Education & Training"
+    - option "Technology & Software"
+    - option "Manufacturing"
+    - option "Construction"
+    - option "Non-Profit"
+    - option "Other (specify below)"
+  - paragraph: What type of business do you run?
+  - text: Country *
+  - combobox:
+    - option "Select a country" [selected]
+    - option "United States"
+    - option "Canada"
+    - option "United Kingdom"
+    - option "Australia"
+    - option "Germany"
+    - option "France"
+    - option "Japan"
+    - option "Other"
+  - text: Street Address *
+  - textbox "Please enter your street address"
+  - text: City *
+  - textbox "Please enter your city"
+  - text: ZIP/Postal Code *
+  - textbox "Please enter your ZIP or postal code"
+  - text: Phone *
+  - textbox "Please enter a valid phone number with area code (e.g., 555-123-4567)"
+  - paragraph: "Include area code: (555) 123-4567 or 555-123-4567"
+  - text: Domain (Optional)
+  - textbox "Enter your website domain if you have one"
+  - paragraph: Leave blank if you don't have a website yet
+  - button "Previous" [disabled]
+  - button "Next" [disabled]
+```
