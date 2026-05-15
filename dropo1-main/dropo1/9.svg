@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="612" height="792" viewBox="0 0 612 792" fill="none">
+  <defs>
+    <filter id="pinShadow" x="254" y="28" width="112" height="112" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="4"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.22 0"/>
+      <feBlend in2="SourceGraphic" result="shape"/>
+    </filter>
+    <style>
+      .headline {
+        fill: #050505;
+        font-family: "Helvetica Neue Condensed", "Arial Narrow", Arial, sans-serif;
+        font-size: 58px;
+        font-stretch: condensed;
+        font-weight: 800;
+        letter-spacing: -1px;
+        text-anchor: middle;
+      }
+
+      .barText {
+        fill: #ffffff;
+        font-family: "Helvetica Neue Condensed", "Arial Narrow", Arial, sans-serif;
+        font-size: 26px;
+        font-stretch: condensed;
+        font-weight: 500;
+        text-anchor: middle;
+      }
+
+      .meta {
+        fill: #121212;
+        font-family: "Helvetica Neue Condensed", "Arial Narrow", Arial, sans-serif;
+        font-size: 12px;
+        font-stretch: condensed;
+        font-weight: 500;
+      }
+
+      .tiny {
+        fill: #121212;
+        font-family: "Helvetica Neue Condensed", "Arial Narrow", Arial, sans-serif;
+        font-size: 10px;
+        font-stretch: condensed;
+        font-weight: 500;
+      }
+    </style>
+  </defs>
+
+  <rect width="612" height="792" fill="#ffffff"/>
+
+  <g filter="url(#pinShadow)">
+    <circle cx="310" cy="78" r="24" fill="#ffffff"/>
+    <circle cx="306" cy="74" r="24" fill="#ffffff" stroke="#1d1d1d" stroke-width="1.4"/>
+    <text x="306" y="78" fill="#111111" font-family="Helvetica Neue Condensed, Arial Narrow, Arial, sans-serif" font-size="13" font-weight="800" text-anchor="middle" dominant-baseline="middle">dropo1</text>
+  </g>
+
+  <text class="headline" x="306" y="206">DON'T LET</text>
+  <text class="headline" x="306" y="282">YOUR BEST WORK</text>
+  <text class="headline" x="306" y="358">DIE IN A FOLDER</text>
+
+  <rect x="40" y="456" width="532" height="38" fill="#050505"/>
+  <text class="barText" x="306" y="482">We produce &amp; help sell your designs</text>
+
+  <rect x="302" y="494" width="9" height="22" fill="#050505"/>
+  <rect x="189" y="516" width="234" height="38" fill="#050505"/>
+  <text class="barText" x="306" y="542">No upfront cost</text>
+
+  <rect x="302" y="554" width="9" height="22" fill="#050505"/>
+  <rect x="218" y="576" width="176" height="38" fill="#050505"/>
+  <text class="barText" x="306" y="602">Small batch</text>
+
+  <rect x="302" y="614" width="9" height="16" fill="#050505"/>
+  <rect x="243" y="630" width="126" height="38" fill="#050505"/>
+  <text class="barText" x="306" y="656">Preorder</text>
+
+  <rect x="305" y="424" width="8" height="2.5" fill="#050505"/>
+
+  <text class="meta" x="12" y="770">DM @drop.o1</text>
+  <text class="meta" x="12" y="785">email: hello@dropo1.com</text>
+
+  <g transform="translate(530 685)">
+    <rect width="60" height="60" fill="#ffffff" stroke="#050505" stroke-width="1.2"/>
+    <rect x="4" y="4" width="16" height="16" fill="#050505"/>
+    <rect x="8" y="8" width="8" height="8" fill="#ffffff"/>
+    <rect x="40" y="4" width="16" height="16" fill="#050505"/>
+    <rect x="44" y="8" width="8" height="8" fill="#ffffff"/>
+    <rect x="4" y="40" width="16" height="16" fill="#050505"/>
+    <rect x="8" y="44" width="8" height="8" fill="#ffffff"/>
+    <rect x="26" y="6" width="4" height="4" fill="#050505"/>
+    <rect x="30" y="10" width="4" height="4" fill="#050505"/>
+    <rect x="22" y="14" width="4" height="4" fill="#050505"/>
+    <rect x="26" y="22" width="4" height="4" fill="#050505"/>
+    <rect x="34" y="22" width="4" height="4" fill="#050505"/>
+    <rect x="38" y="30" width="4" height="4" fill="#050505"/>
+    <rect x="26" y="34" width="4" height="4" fill="#050505"/>
+    <rect x="34" y="38" width="4" height="4" fill="#050505"/>
+    <rect x="42" y="42" width="4" height="4" fill="#050505"/>
+    <rect x="30" y="46" width="4" height="4" fill="#050505"/>
+    <rect x="38" y="50" width="4" height="4" fill="#050505"/>
+    <rect x="22" y="54" width="4" height="4" fill="#050505"/>
+    <rect x="46" y="26" width="8" height="8" fill="#050505"/>
+    <rect x="14" y="26" width="8" height="8" fill="#050505"/>
+  </g>
+
+  <text class="tiny" x="588" y="763" text-anchor="end">Scan to join</text>
+  <text class="tiny" x="588" y="775" text-anchor="end">If it doesn't load on campus WiFi,</text>
+  <text class="tiny" x="588" y="787" text-anchor="end">send us a DM or email.</text>
+</svg>

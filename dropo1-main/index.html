@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DROP 01 Atelier | Independent Designer Drops</title>
+    <meta
+      name="description"
+      content="DROP 01 Atelier is a designer-led platform turning independent fashion ideas into limited, preorder-driven drops."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body class="page-home">
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html">
+          <img class="brand__logo" src="logo.png" alt="DROP 01 Atelier" />
+          <span>Designer-Led Fashion Platform</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#subscribe">Subscribe</a>
+          <a href="about.html">About</a>
+          <a href="shop.html">Shop</a>
+          <a href="designers.html">For Designers</a>
+          <a href="contact.html">Contact Us</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <section class="hero notice-board-hero" data-notice-board>
+        <div class="hero__board-shell">
+          <div class="hero__board" aria-hidden="true">
+            <canvas id="notice-board-canvas"></canvas>
+          </div>
+
+          <div class="hero__overlay">
+            <div class="hero__headline">
+              <p class="eyebrow">Independent design, pinned in public</p>
+              <h1 class="hero__kicker">Your best work deserves daylight.</h1>
+              <p class="lede">
+                This board behaves like a live studio wall: drag notes, fling them away, and pin
+                down a thought of your own.
+              </p>
+              <p class="lede">
+                DROP 01 turns those fragments into
+                <strong>limited, preorder-led fashion drops</strong> built around real demand.
+              </p>
+              <div class="button-row">
+                <a class="button" href="shop.html" data-hover-lift>Shop The Drops</a>
+                <button class="button-ghost" type="button" data-open-modal data-hover-lift>
+                  Join The List
+                </button>
+              </div>
+            </div>
+
+            <aside class="hero__subscribe-card" data-delayed-subscribe hidden>
+              <span>Join us today</span>
+              <strong>Subscribe for exclusive drops, atelier notes, and first access.</strong>
+              <form
+                class="mini-form"
+                data-webhook-form="newsletter-subscribe"
+                data-success-message="You are on the list for the next limited release."
+              >
+                <div class="field">
+                  <label for="hero-subscribe-email">Email address</label>
+                  <input
+                    id="hero-subscribe-email"
+                    name="email"
+                    type="email"
+                    placeholder="your@email.com"
+                    required
+                  />
+                </div>
+                <button class="button" type="submit" data-hover-lift>Let’s go</button>
+              </form>
+            </aside>
+          </div>
+
+          <form class="hero-note-form" data-note-form autocomplete="off">
+            <label for="hero-note-input">Add your own note to the wall</label>
+            <div class="hero-note-form__row">
+              <input
+                id="hero-note-input"
+                name="note"
+                type="text"
+                maxlength="64"
+                placeholder="Write a drop idea, phrase, or reminder"
+                data-note-input
+                required
+              />
+              <button class="button" type="submit" data-hover-lift>Pin It</button>
+            </div>
+            <p class="hero-note-form__status form-note" data-note-status aria-live="polite">
+              Type a note and pin it to the board.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section subscribe-band reveal" id="subscribe">
+        <div class="section-head">
+          <p class="eyebrow">Join us today</p>
+          <h2 class="title-md">Subscribe for exclusive drops, atelier updates, and early access.</h2>
+          <p class="body-copy">
+            Receive first notice when a release opens, along with studio notes from the designers
+            shaping the platform.
+          </p>
+        </div>
+        <form
+          class="subscribe-form"
+          data-webhook-form="newsletter-subscribe"
+          data-success-message="You are on the list for the next limited release."
+        >
+          <div class="field">
+            <label for="subscribe-email">Email address</label>
+            <input id="subscribe-email" name="email" type="email" placeholder="your@email.com" required />
+          </div>
+          <button class="button" type="submit" data-hover-lift>Let’s go</button>
+          <p class="form-note">No spam. Only new drops, capsule previews, and designer stories.</p>
+        </form>
+      </section>
+
+      <section class="section">
+        <div class="section-head reveal">
+          <p class="eyebrow">What the platform does</p>
+          <h2 class="title-lg">A release system built around independent fashion, not the old calendar.</h2>
+          <p class="body-copy">
+            We produce with intention, release in small batches, and remove the pressure for young
+            designers to overextend before demand exists.
+          </p>
+        </div>
+
+        <div class="value-grid">
+          <article class="card reveal">
+            <p class="eyebrow">01 / Designer-first</p>
+            <h3>We protect the idea while shaping it into a product people can preorder.</h3>
+            <p>
+              Sampling, production planning, pricing, and launch storytelling are handled with the
+              designer, not around them.
+            </p>
+            <div class="inline-stat">
+              <div>
+                <strong>Small batch</strong>
+                <span>only produce what demand supports</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <p class="eyebrow">02 / Sustainable by structure</p>
+            <h3>Preorders reduce waste before the first full production run even begins.</h3>
+            <p>
+              Instead of speculative inventory, each drop is calibrated to real appetite, keeping
+              exclusivity high and deadstock low.
+            </p>
+            <div class="inline-stat">
+              <div>
+                <strong>Made on demand</strong>
+                <span>measured release windows</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <p class="eyebrow">03 / Distribution handled</p>
+            <h3>We carry the production and delivery mechanics so designers can stay in creation.</h3>
+            <p>
+              Launch pages, campaign support, studio content, fulfillment, and customer
+              communication are all part of the platform.
+            </p>
+            <div class="inline-stat">
+              <div>
+                <strong>End-to-end support</strong>
+                <span>from concept to customer</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section story-grid">
+        <article class="editorial-card editorial-card--stacked reveal">
+          <img
+            src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80"
+            alt="Designer wearing sculptural black garments in an editorial setting"
+          />
+          <div class="editorial-card__body">
+            <p class="eyebrow">Featured release</p>
+            <h3>Noor Atelier / Veil Trench</h3>
+            <p>
+              Modular outerwear in a pearl-black cotton blend with hidden drape panels and a
+              limited 60-piece production target.
+            </p>
+            <div class="button-row">
+              <a class="button" href="shop.html" data-hover-lift>View Drop</a>
+              <a class="button-ghost" href="about.html" data-hover-lift>Read Our Story</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="quote-card reveal">
+          <span>Designer statement</span>
+          <p>
+            “The best work is often ready long before the system around it is. DROP 01 closes
+            that distance.”
+          </p>
+        </article>
+      </section>
+
+      <section class="section">
+        <div class="section-head reveal">
+          <p class="eyebrow">Preview the shop</p>
+          <h2 class="title-lg">Current drops move quickly and stay intimate.</h2>
+          <p class="body-copy">
+            Each release opens for a short window, with pricing, production, and remaining units
+            visible up front.
+          </p>
+        </div>
+
+        <div class="drops-grid">
+          <article class="drop-card reveal">
+            <div class="drop-card__media">
+              <img
+                src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80"
+                alt="Neutral oversized coat on a model"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=80"
+                alt="Alternate angle of an oversized coat"
+              />
+            </div>
+            <div class="drop-card__body">
+              <div class="drop-card__meta">
+                <span>Isla Ren</span>
+                <strong>$420</strong>
+              </div>
+              <h3>Contour Coat</h3>
+              <p>Architectural wool twill with hidden seam pockets and detachable waist tie.</p>
+              <div class="progress-block" data-progress="74">
+                <div class="progress-copy">
+                  <strong>74% claimed</strong>
+                  <span>18 units left</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="drop-card reveal">
+            <div class="drop-card__media">
+              <img
+                src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1000&q=80"
+                alt="Model in sculptural dress"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=80"
+                alt="Alternate angle of sculptural dress"
+              />
+            </div>
+            <div class="drop-card__body">
+              <div class="drop-card__meta">
+                <span>Studio Lune</span>
+                <strong>$310</strong>
+              </div>
+              <h3>Halo Dress</h3>
+              <p>Bias-cut silk with an asymmetrical hemline and hidden inner corset structure.</p>
+              <div class="progress-block" data-progress="58">
+                <div class="progress-copy">
+                  <strong>58% claimed</strong>
+                  <span>31 units left</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="drop-card reveal">
+            <div class="drop-card__media">
+              <img
+                src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=80"
+                alt="Layered knitwear look in a studio"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=80"
+                alt="Alternate knitwear editorial image"
+              />
+            </div>
+            <div class="drop-card__body">
+              <div class="drop-card__meta">
+                <span>Vale Common</span>
+                <strong>$215</strong>
+              </div>
+              <h3>Framework Knit</h3>
+              <p>Open-structure alpaca knit with engineered drape and brushed tactile finish.</p>
+              <div class="progress-block" data-progress="81">
+                <div class="progress-copy">
+                  <strong>81% claimed</strong>
+                  <span>9 units left</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill"></div></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section featured-banner reveal">
+        <div>
+          <p class="eyebrow">For designers</p>
+          <h2 class="title-md">Keep your concept uncompromised. We will build the release around it.</h2>
+          <p class="body-copy">
+            From sampling and pricing to launch pages and fulfillment, DROP 01 helps independent
+            designers move like a brand without carrying the whole infrastructure alone.
+          </p>
+          <div class="button-row">
+            <a class="button" href="designers.html" data-hover-lift>Apply As A Designer</a>
+            <a class="button-ghost" href="contact.html" data-hover-lift>Book A Conversation</a>
+          </div>
+        </div>
+
+        <div class="featured-banner__metrics">
+          <article class="card">
+            <p class="eyebrow">Production model</p>
+            <h3>Capsule drops, calibrated to demand</h3>
+            <p>Every release is staged to preserve exclusivity, limit waste, and protect cash flow.</p>
+          </article>
+          <article class="card">
+            <p class="eyebrow">Support</p>
+            <h3>Strategy, storytelling, fulfillment</h3>
+            <p>You stay focused on the garment. We organize the release around the garment.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>DROP 01 Atelier. Limited releases for independent designers.</span>
+      <nav aria-label="Footer">
+        <a href="about.html">About</a>
+        <a href="shop.html">Shop</a>
+        <a href="designers.html">For Designers</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </footer>
+
+    <div class="subscribe-modal" data-subscribe-modal aria-hidden="true">
+      <div class="subscribe-modal__scrim"></div>
+      <div class="subscribe-modal__panel">
+        <button class="subscribe-modal__close" type="button" data-close-modal aria-label="Close subscription panel">
+          ×
+        </button>
+        <p class="eyebrow">Join us today</p>
+        <h2 class="title-sm">Subscribe to get updates about new drops and designer releases.</h2>
+        <p class="body-copy">
+          Early access, studio dispatches, and quiet previews before the public launch window.
+        </p>
+        <form
+          class="mini-form"
+          data-webhook-form="newsletter-subscribe"
+          data-success-message="You are on the list for the next limited release."
+        >
+          <div class="field">
+            <label for="modal-email">Email address</label>
+            <input id="modal-email" name="email" type="email" placeholder="your@email.com" required />
+          </div>
+          <button class="button" type="submit" data-hover-lift>Let’s go</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="assets/js/site-config.js"></script>
+    <script src="assets/js/site-config.local.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+  </body>
+</html>
