@@ -322,6 +322,11 @@ function App() {
       <main>
         <section id="services" className="relative bg-white py-24 sm:py-28">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mb-10">
+              <h2 className="text-4xl font-extrabold tracking-[-0.05em] text-slate-900 sm:text-5xl">
+                Our Services
+              </h2>
+            </div>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {services.map((service) => (
                 <article
