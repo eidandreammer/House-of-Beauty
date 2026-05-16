@@ -20,9 +20,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top, rgba(199, 160, 97, 0.12), transparent 30%),
-    linear-gradient(180deg, #fbf9f4 0%, #f6f2ea 100%);
+  background: #fff;
   color: #0f172a;
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
@@ -78,7 +76,7 @@ svg {
 .site-header--hero {
   --header-height: 112px;
   --header-bg: rgba(255, 255, 255, 0.9);
-  --header-shadow: 0 18px 55px rgba(15, 23, 42, 0.08);
+  --header-shadow: none;
   --header-controls-scale: 1;
   --header-controls-y: 0px;
   --wordmark-scale: 1;
@@ -149,6 +147,15 @@ svg {
 .site-header__actions,
 .site-header__menu-button {
   transform-origin: center right;
+}
+
+.hero-backdrop-fade {
+  -webkit-mask-image: linear-gradient(180deg, black 0%, black 80%, transparent 100%);
+  mask-image: linear-gradient(180deg, black 0%, black 80%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
 @media (max-width: 767px) {

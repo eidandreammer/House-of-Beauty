@@ -4,14 +4,28 @@ const salonAddress = '423 Boulevard, Hasbrouck Heights, NJ 07604'
 const salonMapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(salonAddress)}`
 const navLinks = [
   { label: 'Services', href: '#services' },
-  { label: 'Gallery', href: '#gallery' },
   { label: 'About', href: '#about' },
   { label: 'Find salon', href: salonMapHref, external: true },
   { label: 'Contact', href: '#contact' },
 ]
+const contactPhoneNumber = '201-393-0944'
+const contactPhoneHref = 'tel:2013930944'
+const contactEmail = 'info@wendyossersbeauty.com'
+const footerMenuLinks = [
+  { label: 'About Us', href: '#about' },
+  { label: 'FAQ', href: '#contact' },
+  { label: 'Online Booking', href: contactPhoneHref },
+  { label: 'Contact Us', href: '#contact' },
+  { label: 'Accessibility Notice', href: '#contact' },
+]
+const socialLinks = [
+  { label: 'Facebook', href: 'https://www.facebook.com/', platform: 'facebook' },
+  { label: 'Instagram', href: 'https://www.instagram.com/', platform: 'instagram' },
+  { label: 'YouTube', href: 'https://www.youtube.com/', platform: 'youtube' },
+  { label: 'TikTok', href: 'https://www.tiktok.com/', platform: 'tiktok' },
+]
 
-const heroBackgroundPath = '/imgs/HeroSectionBackground.png'
-const heroServices = ['Custom Color', 'Bridal Styling', 'Extensions', 'Texture Services']
+const heroBackgroundPath = '/imgs/HeroSectionBackground.jpg'
 
 const services = [
   {
@@ -117,6 +131,26 @@ const hours = [
   'Saturday: 8:00 AM - 6:00 PM',
   'Sunday - Monday: By appointment',
 ]
+const footerInfoColumns = [
+  {
+    title: 'HAUS OF BEAUTY LOCATION:',
+    items: [
+      { text: salonAddress, href: salonMapHref, external: true },
+      { text: `+1 ${contactPhoneNumber}`, href: contactPhoneHref, underline: true },
+      ...hours.map((slot) => ({ text: slot.replace('AM', 'am').replace('PM', 'pm') })),
+    ],
+  },
+  {
+    title: 'SALON HOURS & BOOKINGS:',
+    items: [
+      { text: 'Appointments, bridal trials, and consultations' },
+      { text: `+1 ${contactPhoneNumber}`, href: contactPhoneHref, underline: true },
+      { text: 'Walk-ins: Limited availability' },
+      { text: 'Color corrections: Consultation required' },
+      { text: 'Bilingual service: English / Spanish' },
+    ],
+  },
+]
 
 function App() {
   const heroRef = useRef(null)
@@ -160,9 +194,9 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-brand-cream text-slate-900">
+    <div className="min-h-screen bg-white text-slate-900">
       <header
-        className={`site-header fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl shadow-[0_18px_55px_rgba(15,23,42,0.08)] ${
+        className={`site-header fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl ${
           isHeroExpanded ? 'site-header--hero' : 'site-header--compact'
         }`}
       >
@@ -253,17 +287,19 @@ function App() {
       </header>
 
       <section ref={heroRef} className="relative min-h-screen overflow-hidden bg-white text-slate-900">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${heroBackgroundPath})`,
-            backgroundPosition: 'right center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-          }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.97)_0%,rgba(0,0,0,0.92)_34%,rgba(0,0,0,0.76)_56%,rgba(0,0,0,0.38)_80%,rgba(0,0,0,0.1)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_left_center,rgba(0,0,0,0.24),transparent_52%)]" />
+        <div className="hero-backdrop-fade absolute inset-0">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${heroBackgroundPath})`,
+              backgroundPosition: 'right center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover',
+            }}
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.97)_0%,rgba(0,0,0,0.92)_34%,rgba(0,0,0,0.76)_56%,rgba(0,0,0,0.38)_80%,rgba(0,0,0,0.1)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_left_center,rgba(0,0,0,0.24),transparent_52%)]" />
+        </div>
         <div className="relative mx-auto flex min-h-screen max-w-[1500px] items-end px-6 pb-10 pt-28 sm:px-8 sm:pb-12 sm:pt-32 lg:px-10 lg:pb-16 lg:pt-36">
           <div className="max-w-[560px]">
             <p className="text-sm font-semibold uppercase tracking-[0.34em] text-brand-gold">
@@ -287,19 +323,13 @@ function App() {
             >
               Book Appointment
             </a>
-
-            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs font-semibold uppercase tracking-[0.28em] text-white/52">
-              {heroServices.map((service) => (
-                <span key={service}>{service}</span>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
       <main>
         <section id="services" className="relative bg-white py-24 sm:py-28">
-          <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-brand-cream to-white" />
+          <div className="absolute inset-x-0 top-0 h-20 bg-white" />
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="max-w-3xl">
               <SectionBadge light>Featured Services</SectionBadge>
@@ -430,99 +460,62 @@ function App() {
         </section>
       </main>
 
-      <footer id="contact" className="bg-brand-cream py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="rounded-[2rem] bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)] ring-1 ring-slate-200/80 lg:p-10">
-            <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-              <div>
-                <SectionBadge light>Contact & Location</SectionBadge>
-                <h2 className="mt-6 max-w-2xl text-4xl font-extrabold tracking-[-0.05em] text-slate-900 sm:text-5xl">
-                  Book your next appointment with Wendy Ossers Haus of Beauty.
-                </h2>
-                <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-                  Call to schedule a custom cut, color, treatment, or bridal beauty service in a
-                  boutique salon setting shaped around polished results and personal care.
+      <footer id="contact" className="bg-black py-[2.8rem] text-white sm:py-[3.2rem]">
+        <div className="mx-auto max-w-[1540px] px-8 sm:px-12 lg:px-16">
+          <div className="grid gap-x-16 gap-y-6 lg:items-center lg:grid-cols-[1fr_1fr_0.9fr] xl:gap-x-24">
+            {footerInfoColumns.map((column) => (
+              <div key={column.title} className="max-w-[360px]">
+                <p className="text-[14px] font-medium uppercase tracking-[0.01em] text-white">
+                  {column.title}
                 </p>
-
-                <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                  <a
-                    href="tel:2013930944"
-                    className="inline-flex items-center justify-center rounded-full bg-brand-charcoal px-6 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-white transition duration-300 hover:-translate-y-0.5 hover:bg-slate-800"
-                  >
-                    Book Appointment
-                  </a>
-                  <a
-                    href="#services"
-                    className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-slate-900 transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold hover:text-brand-gold"
-                  >
-                    Review Services
-                  </a>
+                <div className="mt-3 space-y-1 text-[16px] leading-[1.65] text-white sm:text-[17px]">
+                  {column.items.map((item) => (
+                    <FooterInfoLine key={`${column.title}-${item.text}`} item={item} />
+                  ))}
                 </div>
               </div>
+            ))}
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-[1.6rem] bg-brand-charcoal p-6 text-white">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold">
-                    Salon Address
-                  </p>
-                  <p className="mt-4 font-display text-3xl leading-tight">{salonAddress}</p>
-                  <p className="mt-3 text-sm leading-6 text-slate-300">
-                    A welcoming destination for luxury color, styling, and bridal beauty.
-                  </p>
-                </div>
-
-                <div className="rounded-[1.6rem] border border-slate-200 bg-stone-50 p-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
-                    Reach Out
-                  </p>
-                  <a
-                    href="tel:2013930944"
-                    className="mt-4 block font-display text-3xl leading-tight text-slate-900 transition hover:text-brand-gold"
-                  >
-                    201-393-0944
-                  </a>
-                
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-14 grid gap-10 border-t border-slate-200 pt-10 lg:grid-cols-[1.1fr_0.9fr_0.8fr]">
-            <div>
-              <LogoMark light />
-              <p className="mt-5 max-w-md text-base leading-7 text-slate-600">
-                Luxury styling, luminous color, and personalized care in a warm bilingual
-                environment designed to make every guest feel seen.
-              </p>
-            </div>
-
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
-                Business Hours
-              </p>
-              <div className="mt-5 space-y-3 text-base text-slate-700">
-                {hours.map((slot) => (
-                  <p key={slot}>{slot}</p>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
-                Quick Links
-              </p>
-              <div className="mt-5 space-y-3">
-                {navLinks.map((link) => (
-                  <p key={link.href}>
+            <div className="flex flex-col justify-center lg:justify-self-end lg:pl-6">
+              <nav className="space-y-2 text-[16px] leading-[1.65] sm:text-[17px]">
+                {footerMenuLinks.map((link) => (
+                  <p key={link.label}>
                     <a
                       href={link.href}
                       onClick={(event) => handleNavLinkClick(event, link)}
-                      className="text-base text-slate-700 transition hover:text-brand-gold"
+                      className="underline decoration-[1px] underline-offset-[4px] transition hover:text-brand-gold"
                     >
                       {link.label}
                     </a>
                   </p>
                 ))}
+              </nav>
+
+              <div className="mt-6 sm:mt-9">
+                <p className="text-[16px] leading-[1.7] text-white sm:text-[17px]">
+                  Submit all inquiries to:{' '}
+                  <a
+                    href={`mailto:${contactEmail}`}
+                    className="underline decoration-[1px] underline-offset-[4px] transition hover:text-brand-gold"
+                  >
+                    {contactEmail}
+                  </a>
+                </p>
+
+                <div className="mt-5 flex flex-wrap items-center gap-5 sm:gap-7">
+                  {socialLinks.map((link) => (
+                    <a
+                      key={link.platform}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={link.label}
+                      className="text-brand-gold transition hover:text-brand-gold-soft"
+                    >
+                      <SocialIcon platform={link.platform} />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -545,27 +538,29 @@ function HeroWordmark() {
   )
 }
 
-function LogoMark({ light = false }) {
-  const ringClass = light
-    ? 'border-brand-gold/40 bg-white text-brand-charcoal'
-    : 'border-brand-gold/35 bg-white/6 text-white'
-  const headingClass = light ? 'text-slate-900' : 'text-white'
-  const subClass = light ? 'text-slate-500' : 'text-slate-300'
+function FooterInfoLine({ item }) {
+  if (item.href) {
+    const linkProps = item.external
+      ? { target: '_blank', rel: 'noreferrer' }
+      : {}
+
+    return (
+      <p>
+        <a
+          href={item.href}
+          {...linkProps}
+          className={`transition hover:text-brand-gold ${
+            item.underline ? 'underline decoration-[1px] underline-offset-[4px]' : ''
+          }`}
+        >
+          {item.text}
+        </a>
+      </p>
+    )
+  }
 
   return (
-    <a href="#" className="flex items-center gap-3">
-      <div
-        className={`grid h-11 w-11 place-items-center rounded-full border text-sm font-semibold tracking-[0.3em] ${ringClass}`}
-      >
-        WO
-      </div>
-      <div>
-        <p className={`font-script text-2xl leading-none ${headingClass}`}>Wendy Ossers</p>
-        <p className={`mt-1 text-[11px] font-semibold uppercase tracking-[0.32em] ${subClass}`}>
-          Haus of Beauty
-        </p>
-      </div>
-    </a>
+    <p>{item.text}</p>
   )
 }
 
@@ -589,6 +584,39 @@ function ServiceIcon({ code }) {
       {code}
     </div>
   )
+}
+
+function SocialIcon({ platform }) {
+  const className = 'h-[2rem] w-[2rem] fill-current'
+
+  switch (platform) {
+    case 'instagram':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+          <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 1.9A3.6 3.6 0 0 0 3.9 7.5v9a3.6 3.6 0 0 0 3.6 3.6h9a3.6 3.6 0 0 0 3.6-3.6v-9a3.6 3.6 0 0 0-3.6-3.6h-9Zm9.68 1.43a1.14 1.14 0 1 1 0 2.28 1.14 1.14 0 0 1 0-2.28ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.9A3.1 3.1 0 1 0 12 15.1 3.1 3.1 0 0 0 12 8.9Z" />
+        </svg>
+      )
+    case 'facebook':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+          <path d="M13.3 22v-8.2h2.78l.42-3.22H13.3V8.5c0-.93.26-1.57 1.6-1.57h1.71V4.04A23.8 23.8 0 0 0 14.12 4C11.66 4 10 5.5 10 8.24v2.32H7.2v3.22H10V22h3.3Z" />
+        </svg>
+      )
+    case 'youtube':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+          <path d="M21.58 7.19a2.98 2.98 0 0 0-2.1-2.1C17.6 4.6 12 4.6 12 4.6s-5.6 0-7.48.49a2.98 2.98 0 0 0-2.1 2.1A31.1 31.1 0 0 0 2 12a31.1 31.1 0 0 0 .42 4.81 2.98 2.98 0 0 0 2.1 2.1c1.88.49 7.48.49 7.48.49s5.6 0 7.48-.49a2.98 2.98 0 0 0 2.1-2.1A31.1 31.1 0 0 0 22 12a31.1 31.1 0 0 0-.42-4.81ZM10.2 15.1V8.9L15.6 12l-5.4 3.1Z" />
+        </svg>
+      )
+    case 'tiktok':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+          <path d="M14.78 3c.28 2.32 1.56 3.9 3.83 4.05v2.78a6.65 6.65 0 0 1-3.74-1.18v5.21a5.43 5.43 0 1 1-5.43-5.43c.34 0 .68.03 1 .1v2.92a2.5 2.5 0 0 0-1-.2 2.6 2.6 0 1 0 2.6 2.6V3h2.74Z" />
+        </svg>
+      )
+    default:
+      return null
+  }
 }
 
 export default App
