@@ -29,52 +29,44 @@ const heroBackgroundPath = '/imgs/HeroSectionBackground.jpg'
 
 const services = [
   {
-    code: 'HS',
     title: 'Haircutting & Styling',
-    description:
-      'Precision cuts, polished blowouts, and signature styling designed around your face shape and daily routine.',
+    duration: 60,
+    description: 'Precision cuts and styling tailored to your face shape and daily routine.',
   },
   {
-    code: 'BA',
     title: 'Balayage',
-    description:
-      'Soft, dimensional balayage for luminous ribbons of color and effortless grow-out.',
+    duration: 180,
+    description: 'Soft hand-painted color for a bright, dimensional, low-maintenance finish.',
   },
   {
-    code: 'CC',
     title: 'Corrective Color',
-    description:
-      'Thoughtful color correction that restores tone, balance, and confidence without cutting corners.',
+    duration: 240,
+    description: 'Thoughtful color correction to restore tone, balance, and confidence.',
   },
   {
-    code: 'HL',
     title: 'Highlighting',
-    description:
-      'Custom highlight placement for brightening, blending, and a refined multi-tonal finish.',
+    duration: 150,
+    description: 'Custom lightening placement for brightness, blend, and polished dimension.',
   },
   {
-    code: 'KT',
     title: 'Keratin Treatments',
-    description:
-      'Smoothing treatments that reduce frizz, boost shine, and make styling more manageable.',
+    duration: 120,
+    description: 'Smoothing treatment that helps reduce frizz and improve shine.',
   },
   {
-    code: 'BM',
     title: 'Bridal Services & Makeup',
-    description:
-      'Event-ready beauty for weddings, portraits, and special occasions with salon polish.',
+    duration: 180,
+    description: 'Complete event-ready hair and makeup for weddings and special occasions.',
   },
   {
-    code: 'HR',
     title: 'Hair Relaxers',
-    description:
-      'Texture-smoothing services handled with care, consultation, and a healthy-hair mindset.',
+    duration: 120,
+    description: 'Texture-smoothing service performed with care and a healthy-hair focus.',
   },
   {
-    code: 'HE',
     title: 'Hair Extensions',
-    description:
-      'Length, fullness, and transformation services tailored for seamless movement and blend.',
+    duration: 210,
+    description: 'Length and fullness enhancements designed for a seamless natural blend.',
   },
 ]
 
@@ -329,38 +321,27 @@ function App() {
 
       <main>
         <section id="services" className="relative bg-white py-24 sm:py-28">
-          <div className="absolute inset-x-0 top-0 h-20 bg-white" />
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <SectionBadge light>Featured Services</SectionBadge>
-              <h2 className="mt-6 max-w-2xl text-4xl font-extrabold tracking-[-0.05em] text-slate-900 sm:text-5xl">
-                Boutique salon services with a modern, elevated finish.
-              </h2>
-              <p className="mt-6 text-lg leading-8 text-slate-600">
-                From custom cuts and luminous blonding to corrective color and bridal beauty,
-                every service is structured for luxury, clarity, and results that last beyond
-                the appointment.
-              </p>
-            </div>
-
-            <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {services.map((service) => (
                 <article
                   key={service.title}
-                  className="group flex h-full flex-col rounded-[1.8rem] border border-slate-200/80 bg-white p-6 shadow-[0_18px_55px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-2 hover:shadow-[0_28px_80px_rgba(15,23,42,0.12)]"
+                  className="flex h-full flex-col rounded-[2px] bg-white p-6 shadow-[0_12px_32px_rgba(15,23,42,0.08)]"
                 >
-                  <ServiceIcon code={service.code} />
-                  <h3 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-slate-900">
+                  <h3 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900">
                     {service.title}
                   </h3>
-                  <p className="mt-4 text-[15px] leading-7 text-slate-600">
+                  <p className="mt-3 text-base text-slate-600">
+                    {formatServiceDuration(service.duration)}
+                  </p>
+                  <p className="mt-3 text-[15px] leading-7 text-slate-600">
                     {service.description}
                   </p>
                   <a
-                    href="#contact"
-                    className="mt-auto pt-6 text-sm font-semibold uppercase tracking-[0.18em] text-brand-charcoal transition duration-300 group-hover:translate-x-1 group-hover:text-brand-gold"
+                    href="tel:2013930944"
+                    className="mt-6 inline-flex w-fit items-center justify-center rounded-[2px] bg-slate-900 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-slate-700"
                   >
-                    Learn More
+                    Create Appointment
                   </a>
                 </article>
               ))}
@@ -525,6 +506,22 @@ function App() {
   )
 }
 
+function formatServiceDuration(minutes) {
+  if (minutes <= 59) {
+    return `Approx. ${minutes} min`
+  }
+
+  const hours = Math.floor(minutes / 60)
+  const remainingMinutes = minutes % 60
+  const hourLabel = hours === 1 ? 'hour' : 'hours'
+
+  if (remainingMinutes === 0) {
+    return `Approx. ${hours} ${hourLabel}`
+  }
+
+  return `Approx. ${hours} ${hourLabel} ${remainingMinutes} min`
+}
+
 function HeroWordmark() {
   return (
     <a href="#" className="site-header__wordmark shrink-0">
@@ -575,14 +572,6 @@ function SectionBadge({ children, light = false }) {
     >
       {children}
     </span>
-  )
-}
-
-function ServiceIcon({ code }) {
-  return (
-    <div className="inline-flex h-14 w-14 items-center justify-center rounded-[1.1rem] border border-brand-gold/20 bg-brand-gold/10 text-lg font-semibold tracking-[0.18em] text-brand-charcoal shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-      {code}
-    </div>
   )
 }
 
