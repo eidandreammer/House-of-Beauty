@@ -121,140 +121,137 @@ function App() {
 
   return (
     <div className="min-h-screen bg-brand-cream text-slate-900">
-      <section className="relative bg-white text-slate-900">
-        <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl">
-          <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-6 px-6 py-5 lg:px-8 xl:px-10">
-            <HeroWordmark />
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl shadow-[0_18px_55px_rgba(15,23,42,0.08)]">
+        <div className="mx-auto flex max-w-[1460px] items-center justify-between gap-4 px-5 py-4 lg:px-7 xl:px-8">
+          <HeroWordmark />
 
-            <nav className="hidden items-center gap-8 xl:flex">
+          <nav className="hidden items-center gap-8 xl:flex">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="whitespace-nowrap text-[16px] font-semibold tracking-[0.04em] text-slate-900 transition hover:text-brand-gold"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="hidden items-center gap-3 xl:flex">
+            <a
+              href="tel:2013930944"
+              className="whitespace-nowrap text-[15px] font-semibold uppercase tracking-[0.1em] text-slate-500 transition hover:text-slate-900"
+            >
+              201-393-0944
+            </a>
+            <span className="whitespace-nowrap rounded-full border border-slate-300 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-600">
+              Se Habla Espanol
+            </span>
+            <a
+              href="tel:2013930944"
+              className="whitespace-nowrap rounded-full border border-slate-900 px-5 py-3 text-[14px] font-semibold uppercase tracking-[0.12em] text-slate-900 transition duration-300 hover:bg-slate-900 hover:text-white"
+            >
+              Book Appointment
+            </a>
+          </div>
+
+          <button
+            type="button"
+            aria-label="Toggle navigation"
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((open) => !open)}
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-300 text-slate-900 transition hover:border-slate-900 xl:hidden"
+          >
+            <span className="relative h-4 w-5">
+              <span
+                className={`absolute left-0 top-0 h-0.5 w-5 bg-current transition ${
+                  isMenuOpen ? 'translate-y-[7px] rotate-45' : ''
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-[7px] h-0.5 w-5 bg-current transition ${
+                  isMenuOpen ? 'opacity-0' : ''
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-[14px] h-0.5 w-5 bg-current transition ${
+                  isMenuOpen ? '-translate-y-[7px] -rotate-45' : ''
+                }`}
+              />
+            </span>
+          </button>
+        </div>
+
+        {isMenuOpen && (
+          <div className="border-t border-slate-200 bg-white xl:hidden">
+            <div className="mx-auto flex max-w-[1500px] flex-col gap-5 px-6 py-7 lg:px-8">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-[15px] font-medium tracking-[0.04em] text-slate-900 transition hover:text-brand-gold"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-base font-semibold uppercase tracking-[0.24em] text-slate-900 transition hover:text-brand-gold"
                 >
                   {link.label}
                 </a>
               ))}
-            </nav>
-
-            <div className="hidden items-center gap-4 xl:flex">
-              <a
-                href="tel:2013930944"
-                className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500 transition hover:text-slate-900"
-              >
-                201-393-0944
-              </a>
-              <span className="rounded-full border border-slate-300 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-600">
-                Se Habla Espanol
-              </span>
-              <a
-                href="tel:2013930944"
-                className="rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-slate-900 transition duration-300 hover:bg-slate-900 hover:text-white"
-              >
-                Book Appointment
-              </a>
-            </div>
-
-            <button
-              type="button"
-              aria-label="Toggle navigation"
-              aria-expanded={isMenuOpen}
-              onClick={() => setIsMenuOpen((open) => !open)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 text-slate-900 transition hover:border-slate-900 xl:hidden"
-            >
-              <span className="relative h-4 w-5">
-                <span
-                  className={`absolute left-0 top-0 h-0.5 w-5 bg-current transition ${
-                    isMenuOpen ? 'translate-y-[7px] rotate-45' : ''
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-[7px] h-0.5 w-5 bg-current transition ${
-                    isMenuOpen ? 'opacity-0' : ''
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-[14px] h-0.5 w-5 bg-current transition ${
-                    isMenuOpen ? '-translate-y-[7px] -rotate-45' : ''
-                  }`}
-                />
-              </span>
-            </button>
-          </div>
-
-          {isMenuOpen && (
-            <div className="border-t border-slate-200 bg-white xl:hidden">
-              <div className="mx-auto flex max-w-[1400px] flex-col gap-4 px-6 py-6 lg:px-8">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-900 transition hover:text-brand-gold"
-                  >
-                    {link.label}
-                  </a>
-                ))}
-                <div className="flex flex-col gap-3 border-t border-slate-200 pt-4">
-                  <span className="rounded-full border border-slate-300 px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-600">
-                    Se Habla Espanol
-                  </span>
-                  <a
-                    href="tel:2013930944"
-                    className="rounded-full bg-slate-900 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-slate-700"
-                  >
-                    Book Appointment
-                  </a>
-                </div>
-              </div>
-            </div>
-          )}
-        </header>
-
-        <div className="mx-auto max-w-[1400px] px-4 pb-6 pt-4 sm:px-6 lg:px-8 lg:pb-10">
-          <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.14)]">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `url(${heroBackgroundPath})`,
-                backgroundPosition: 'right center',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-              }}
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.92)_26%,rgba(0,0,0,0.64)_46%,rgba(0,0,0,0.12)_72%,rgba(0,0,0,0)_100%)]" />
-
-            <div className="relative flex min-h-[560px] items-end px-6 py-8 sm:min-h-[620px] sm:px-10 sm:py-10 lg:px-16 lg:py-14">
-              <div className="max-w-[470px] rounded-[1.8rem] border border-white/10 bg-black/88 p-8 shadow-[0_24px_70px_rgba(0,0,0,0.4)] backdrop-blur-sm sm:p-10">
-                <p className="text-xs font-semibold uppercase tracking-[0.34em] text-brand-gold">
-                  Luxury Hair Studio
-                </p>
-                <h1 className="mt-5 text-4xl font-extrabold uppercase leading-[0.92] tracking-[-0.05em] text-white sm:text-5xl lg:text-6xl">
-                  Refined Hair, Elevated Beauty
-                </h1>
-                <p className="mt-5 text-lg leading-8 text-white/82">
-                  Wendy Ossers Haus of Beauty delivers personalized color, bridal glam,
-                  extensions, and styling with a polished editorial finish.
-                </p>
-                <p className="mt-4 text-base leading-7 text-white/62">
-                  Bilingual consultations, texture-aware care, and an appointment experience
-                  designed around your look and routine.
-                </p>
-
+              <div className="flex flex-col gap-4 border-t border-slate-200 pt-5">
+                <span className="rounded-full border border-slate-300 px-5 py-3 text-center text-xs font-semibold uppercase tracking-[0.3em] text-slate-600">
+                  Se Habla Espanol
+                </span>
                 <a
                   href="tel:2013930944"
-                  className="mt-8 inline-flex items-center justify-center rounded-[0.9rem] bg-white px-8 py-4 text-sm font-extrabold uppercase tracking-[0.24em] text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-stone-100"
+                  className="rounded-full bg-slate-900 px-6 py-4 text-center text-base font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-slate-700"
                 >
                   Book Appointment
                 </a>
-
-                <div className="mt-8 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/52">
-                  {heroServices.map((service) => (
-                    <span key={service}>{service}</span>
-                  ))}
-                </div>
               </div>
+            </div>
+          </div>
+        )}
+      </header>
+
+      <section className="relative overflow-hidden bg-white text-slate-900">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${heroBackgroundPath})`,
+            backgroundPosition: 'right center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.97)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.66)_46%,rgba(0,0,0,0.2)_72%,rgba(0,0,0,0.04)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_left_center,rgba(0,0,0,0.18),transparent_34%)]" />
+
+        <div className="relative mx-auto flex min-h-screen max-w-[1500px] items-end px-6 pb-10 pt-28 sm:px-8 sm:pb-12 sm:pt-32 lg:px-10 lg:pb-16 lg:pt-36">
+          <div className="max-w-[560px] rounded-[1.8rem] border border-white/10 bg-black/86 p-8 shadow-[0_30px_90px_rgba(0,0,0,0.38)] backdrop-blur-sm sm:p-10 lg:p-12">
+            <p className="text-sm font-semibold uppercase tracking-[0.34em] text-brand-gold">
+              Luxury Hair Studio
+            </p>
+            <h1 className="mt-5 text-5xl font-extrabold uppercase leading-[0.9] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
+              Refined Hair, Elevated Beauty
+            </h1>
+            <p className="mt-6 text-xl leading-9 text-white/82">
+              Wendy Ossers Haus of Beauty delivers personalized color, bridal glam,
+              extensions, and styling with a polished editorial finish.
+            </p>
+            <p className="mt-5 text-lg leading-8 text-white/62">
+              Bilingual consultations, texture-aware care, and an appointment experience
+              designed around your look and routine.
+            </p>
+
+            <a
+              href="tel:2013930944"
+              className="mt-9 inline-flex items-center justify-center rounded-[0.9rem] bg-white px-9 py-4 text-[15px] font-extrabold uppercase tracking-[0.24em] text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-stone-100"
+            >
+              Book Appointment
+            </a>
+
+            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs font-semibold uppercase tracking-[0.28em] text-white/52">
+              {heroServices.map((service) => (
+                <span key={service}>{service}</span>
+              ))}
             </div>
           </div>
         </div>
@@ -499,10 +496,10 @@ function App() {
 function HeroWordmark() {
   return (
     <a href="#" className="shrink-0">
-      <p className="text-[1.8rem] font-black uppercase tracking-[0.22em] text-slate-950 sm:text-[2.2rem]">
+      <p className="text-[1.95rem] font-black uppercase tracking-[0.22em] text-slate-950 sm:text-[2.45rem]">
         Wendy Ossers
       </p>
-      <p className="mt-1 text-[0.68rem] font-semibold uppercase tracking-[0.52em] text-slate-500 sm:text-[0.74rem]">
+      <p className="mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.52em] text-slate-500 sm:text-[0.8rem]">
         Haus of Beauty
       </p>
     </a>
