@@ -8,7 +8,6 @@ const navLinks = [
 ]
 
 const heroBackgroundPath = '/imgs/HeroSectionBackground.png'
-
 const heroServices = ['Custom Color', 'Bridal Styling', 'Extensions', 'Texture Services']
 
 const services = [
@@ -211,7 +210,7 @@ function App() {
         )}
       </header>
 
-      <section className="relative overflow-hidden bg-white text-slate-900">
+      <section className="relative min-h-screen overflow-hidden bg-white text-slate-900">
         <div
           className="absolute inset-0"
           style={{
@@ -221,11 +220,10 @@ function App() {
             backgroundSize: 'cover',
           }}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.97)_0%,rgba(0,0,0,0.9)_28%,rgba(0,0,0,0.66)_46%,rgba(0,0,0,0.2)_72%,rgba(0,0,0,0.04)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_left_center,rgba(0,0,0,0.18),transparent_34%)]" />
-
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.97)_0%,rgba(0,0,0,0.92)_34%,rgba(0,0,0,0.76)_56%,rgba(0,0,0,0.38)_80%,rgba(0,0,0,0.1)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_left_center,rgba(0,0,0,0.24),transparent_52%)]" />
         <div className="relative mx-auto flex min-h-screen max-w-[1500px] items-end px-6 pb-10 pt-28 sm:px-8 sm:pb-12 sm:pt-32 lg:px-10 lg:pb-16 lg:pt-36">
-          <div className="max-w-[560px] rounded-[1.8rem] border border-white/10 bg-black/86 p-8 shadow-[0_30px_90px_rgba(0,0,0,0.38)] backdrop-blur-sm sm:p-10 lg:p-12">
+          <div className="max-w-[560px]">
             <p className="text-sm font-semibold uppercase tracking-[0.34em] text-brand-gold">
               Luxury Hair Studio
             </p>
