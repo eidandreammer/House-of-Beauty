@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+const salonAddress = '423 Boulevard, Hasbrouck Heights, NJ 07604'
+const salonMapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(salonAddress)}`
 const navLinks = [
   { label: 'Services', href: '#services' },
   { label: 'Gallery', href: '#gallery' },
   { label: 'About', href: '#about' },
+  { label: 'Find salon', href: salonMapHref, external: true },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -116,19 +119,62 @@ const hours = [
 ]
 
 function App() {
+  const heroRef = useRef(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isHeroExpanded, setIsHeroExpanded] = useState(true)
+
+  const handleNavLinkClick = (event, link) => {
+    if (link.external) {
+      event.preventDefault()
+      const newWindow = window.open(link.href, '_blank', 'noopener,noreferrer')
+
+      if (newWindow) {
+        newWindow.opener = null
+      }
+    }
+
+    if (isMenuOpen) {
+      setIsMenuOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    const heroElement = heroRef.current
+
+    if (!heroElement || typeof IntersectionObserver === 'undefined') {
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeroExpanded(entry.isIntersecting && entry.intersectionRatio >= 0.58)
+      },
+      {
+        threshold: [0, 0.58, 1],
+      }
+    )
+
+    observer.observe(heroElement)
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div className="min-h-screen bg-brand-cream text-slate-900">
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl shadow-[0_18px_55px_rgba(15,23,42,0.08)]">
-        <div className="mx-auto flex max-w-[1460px] items-center justify-between gap-4 px-5 py-4 lg:px-7 xl:px-8">
+      <header
+        className={`site-header fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl shadow-[0_18px_55px_rgba(15,23,42,0.08)] ${
+          isHeroExpanded ? 'site-header--hero' : 'site-header--compact'
+        }`}
+      >
+        <div className="site-header__inner mx-auto flex max-w-[1460px] items-center justify-between gap-4 px-5 lg:px-7 xl:px-8">
           <HeroWordmark />
 
-          <nav className="hidden items-center gap-8 xl:flex">
+          <nav className="site-header__nav hidden items-center gap-8 xl:flex">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
+                onClick={(event) => handleNavLinkClick(event, link)}
                 className="whitespace-nowrap text-[16px] font-semibold tracking-[0.04em] text-slate-900 transition hover:text-brand-gold"
               >
                 {link.label}
@@ -136,16 +182,14 @@ function App() {
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 xl:flex">
+          <div className="site-header__actions hidden items-center gap-3 xl:flex">
             <a
               href="tel:2013930944"
               className="whitespace-nowrap text-[15px] font-semibold uppercase tracking-[0.1em] text-slate-500 transition hover:text-slate-900"
             >
               201-393-0944
             </a>
-            <span className="whitespace-nowrap rounded-full border border-slate-300 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-600">
-              Se Habla Espanol
-            </span>
+           
             <a
               href="tel:2013930944"
               className="whitespace-nowrap rounded-full border border-slate-900 px-5 py-3 text-[14px] font-semibold uppercase tracking-[0.12em] text-slate-900 transition duration-300 hover:bg-slate-900 hover:text-white"
@@ -159,7 +203,7 @@ function App() {
             aria-label="Toggle navigation"
             aria-expanded={isMenuOpen}
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-300 text-slate-900 transition hover:border-slate-900 xl:hidden"
+            className="site-header__menu-button inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-300 text-slate-900 transition hover:border-slate-900 xl:hidden"
           >
             <span className="relative h-4 w-5">
               <span
@@ -188,16 +232,14 @@ function App() {
                 <a
                   key={link.href}
                   href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(event) => handleNavLinkClick(event, link)}
                   className="text-base font-semibold uppercase tracking-[0.24em] text-slate-900 transition hover:text-brand-gold"
                 >
                   {link.label}
                 </a>
               ))}
               <div className="flex flex-col gap-4 border-t border-slate-200 pt-5">
-                <span className="rounded-full border border-slate-300 px-5 py-3 text-center text-xs font-semibold uppercase tracking-[0.3em] text-slate-600">
-                  Se Habla Espanol
-                </span>
+                
                 <a
                   href="tel:2013930944"
                   className="rounded-full bg-slate-900 px-6 py-4 text-center text-base font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-slate-700"
@@ -210,7 +252,7 @@ function App() {
         )}
       </header>
 
-      <section className="relative min-h-screen overflow-hidden bg-white text-slate-900">
+      <section ref={heroRef} className="relative min-h-screen overflow-hidden bg-white text-slate-900">
         <div
           className="absolute inset-0"
           style={{
@@ -423,7 +465,7 @@ function App() {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-gold">
                     Salon Address
                   </p>
-                  <p className="mt-4 font-display text-3xl leading-tight">423 [Street Name]</p>
+                  <p className="mt-4 font-display text-3xl leading-tight">{salonAddress}</p>
                   <p className="mt-3 text-sm leading-6 text-slate-300">
                     A welcoming destination for luxury color, styling, and bridal beauty.
                   </p>
@@ -439,9 +481,7 @@ function App() {
                   >
                     201-393-0944
                   </a>
-                  <p className="mt-3 rounded-full bg-brand-gold/15 px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-charcoal">
-                    Se Habla Espanol
-                  </p>
+                
                 </div>
               </div>
             </div>
@@ -476,6 +516,7 @@ function App() {
                   <p key={link.href}>
                     <a
                       href={link.href}
+                      onClick={(event) => handleNavLinkClick(event, link)}
                       className="text-base text-slate-700 transition hover:text-brand-gold"
                     >
                       {link.label}
@@ -493,11 +534,11 @@ function App() {
 
 function HeroWordmark() {
   return (
-    <a href="#" className="shrink-0">
-      <p className="text-[1.95rem] font-black uppercase tracking-[0.22em] text-slate-950 sm:text-[2.45rem]">
+    <a href="#" className="site-header__wordmark shrink-0">
+      <p className="site-header__wordmark-title text-[1.95rem] font-black uppercase tracking-[0.22em] text-slate-950 sm:text-[2.45rem]">
         Wendy Ossers
       </p>
-      <p className="mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.52em] text-slate-500 sm:text-[0.8rem]">
+      <p className="site-header__wordmark-subtitle mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.52em] text-slate-500 sm:text-[0.8rem]">
         Haus of Beauty
       </p>
     </a>
