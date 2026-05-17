@@ -182,6 +182,9 @@ function App() {
     activeAppointmentTime,
     selectedService.duration
   )
+  const bookingInputClassName =
+    'mt-2 w-full rounded-[5px] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-4 focus:ring-slate-200/70'
+  const bookingSelectClassName = `${bookingInputClassName} disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400`
 
   const handleNavLinkClick = (event, link) => {
     if (link.external) {
@@ -414,7 +417,7 @@ function App() {
 
             <a
               href={bookingSectionHref}
-              className="whitespace-nowrap rounded-full border border-slate-900 px-5 py-3 text-[14px] font-semibold uppercase tracking-[0.12em] text-slate-900 transition duration-300 hover:bg-slate-900 hover:text-white"
+              className="whitespace-nowrap rounded-[5px] border border-slate-900 px-5 py-3 text-[14px] font-semibold uppercase tracking-[0.12em] text-slate-900 transition duration-300 hover:bg-slate-900 hover:text-white"
             >
               Book Appointment
             </a>
@@ -425,7 +428,7 @@ function App() {
             aria-label="Toggle navigation"
             aria-expanded={isMenuOpen}
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="site-header__menu-button inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-300 text-slate-900 transition hover:border-slate-900 xl:hidden"
+            className="site-header__menu-button inline-flex h-12 w-12 items-center justify-center rounded-[5px] border border-slate-300 text-slate-900 transition hover:border-slate-900 xl:hidden"
           >
             <span className="relative h-4 w-5">
               <span
@@ -464,7 +467,7 @@ function App() {
                 <a
                   href={bookingSectionHref}
                   onClick={() => setIsMenuOpen(false)}
-                  className="rounded-full bg-slate-900 px-6 py-4 text-center text-base font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-slate-700"
+                  className="rounded-[5px] bg-slate-900 px-6 py-4 text-center text-base font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-slate-700"
                 >
                   Book Appointment
                 </a>
@@ -507,7 +510,7 @@ function App() {
 
             <a
               href={bookingSectionHref}
-              className="mt-9 inline-flex items-center justify-center rounded-[0.9rem] bg-white px-9 py-4 text-[15px] font-extrabold uppercase tracking-[0.24em] text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-stone-100"
+              className="mt-9 inline-flex items-center justify-center rounded-[5px] bg-white px-9 py-4 text-[15px] font-extrabold uppercase tracking-[0.24em] text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-stone-100"
             >
               Book Appointment
             </a>
@@ -530,7 +533,7 @@ function App() {
                 return (
                   <article
                     key={service.title}
-                    className={`flex h-full flex-col rounded-[2px] border p-6 shadow-[0_12px_32px_rgba(15,23,42,0.08)] transition ${
+                    className={`flex h-full flex-col rounded-[5px] border p-6 shadow-[0_12px_32px_rgba(15,23,42,0.08)] transition ${
                       isSelected
                         ? 'border-brand-gold/70 bg-brand-gold/5'
                         : 'border-white bg-white'
@@ -548,7 +551,7 @@ function App() {
                     <button
                       type="button"
                       onClick={() => handleServiceSelection(service.title, true)}
-                      className={`mt-6 inline-flex w-fit items-center justify-center rounded-[2px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+                      className={`mt-6 inline-flex w-fit items-center justify-center rounded-[5px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
                         isSelected
                           ? 'bg-brand-gold text-brand-charcoal hover:bg-brand-gold-soft'
                           : 'bg-slate-900 text-white hover:bg-slate-700'
@@ -566,19 +569,18 @@ function App() {
         <section
           id={bookingSectionId}
           ref={bookingSectionRef}
-          className="relative overflow-hidden bg-stone-100 py-24 sm:py-28"
+          className="relative overflow-hidden bg-slate-100 py-24 sm:py-28"
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(199,160,97,0.26),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(15,23,42,0.08),transparent_28%)]" />
-          <div className="mx-auto max-w-4xl px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/82 p-6 shadow-[0_28px_80px_rgba(15,23,42,0.12)] backdrop-blur-md sm:p-8">
-              <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(199,160,97,0.14),transparent_60%)]" />
-              <div className="relative">
-                <div className="flex flex-col gap-4 border-b border-slate-200/80 pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0))]" />
+          <div className="mx-auto w-full px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-5xl xl:max-w-[75vw]">
+              <div className="relative rounded-[5px] border border-slate-200 bg-white p-6 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:p-8 lg:p-10">
+                <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 lg:flex-row lg:items-end lg:justify-between">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-brand-gold">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500">
                       Online Form
                     </p>
-                    <h3 className="mt-4 text-3xl font-extrabold tracking-[-0.04em] text-slate-900">
+                    <h3 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-950">
                       Create an appointment
                     </h3>
                   </div>
@@ -588,202 +590,216 @@ function App() {
                   </p>
                 </div>
 
-                <form onSubmit={handleBookingSubmit} className="mt-8">
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <BookingField
-                      label="Guest Name"
-                      htmlFor="customerName"
-                      input={
-                        <input
-                          id="customerName"
-                          name="customerName"
-                          type="text"
-                          autoComplete="name"
-                          value={bookingForm.customerName}
-                          onChange={handleBookingFieldChange}
-                          placeholder="Wendy Ossers Guest"
-                          required
-                          className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15"
-                        />
-                      }
-                    />
-                    <BookingField
-                      label="Phone"
-                      htmlFor="phone"
-                      input={
-                        <input
-                          id="phone"
-                          name="phone"
-                          type="tel"
-                          autoComplete="tel"
-                          value={bookingForm.phone}
-                          onChange={handleBookingFieldChange}
-                          placeholder="+1 201 393 0944"
-                          required
-                          className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15"
-                        />
-                      }
-                    />
-                  </div>
-
-                  <BookingField
-                    label="Email"
-                    htmlFor="email"
-                    className="mt-5"
-                    input={
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        value={bookingForm.email}
-                        onChange={handleBookingFieldChange}
-                        placeholder="guest@example.com"
-                        required
-                        className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15"
+                <form
+                  onSubmit={handleBookingSubmit}
+                  className="mt-8 grid gap-8 xl:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.95fr)]"
+                >
+                  <div className="space-y-8">
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <BookingField
+                        label="Guest Name"
+                        htmlFor="customerName"
+                        input={
+                          <input
+                            id="customerName"
+                            name="customerName"
+                            type="text"
+                            autoComplete="name"
+                            value={bookingForm.customerName}
+                            onChange={handleBookingFieldChange}
+                            placeholder="Wendy Ossers Guest"
+                            required
+                            className={bookingInputClassName}
+                          />
+                        }
                       />
-                    }
-                  />
-
-                  <div className="mt-8">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="text-[12px] font-semibold uppercase tracking-[0.28em] text-slate-500">
-                        Service Selection
-                      </p>
-                      <span className="text-sm text-slate-500">
-                        {formatServiceDuration(selectedService.duration)}
-                      </span>
+                      <BookingField
+                        label="Phone"
+                        htmlFor="phone"
+                        input={
+                          <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            autoComplete="tel"
+                            value={bookingForm.phone}
+                            onChange={handleBookingFieldChange}
+                            placeholder="+1 201 393 0944"
+                            required
+                            className={bookingInputClassName}
+                          />
+                        }
+                      />
                     </div>
 
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      {services.map((service) => {
-                        const isActive = bookingForm.serviceName === service.title
-
-                        return (
-                          <button
-                            key={service.title}
-                            type="button"
-                            aria-pressed={isActive}
-                            onClick={() => handleServiceSelection(service.title)}
-                            className={`rounded-[1.2rem] border p-4 text-left transition ${
-                              isActive
-                                ? 'border-brand-gold bg-brand-gold/10 shadow-[0_10px_25px_rgba(199,160,97,0.12)]'
-                                : 'border-slate-200 bg-white hover:border-brand-gold/60 hover:bg-brand-gold/5'
-                            }`}
-                          >
-                            <p className="text-base font-semibold tracking-[-0.02em] text-slate-900">
-                              {service.title}
-                            </p>
-                            <p className="mt-2 text-sm leading-6 text-slate-500">
-                              {formatServiceDuration(service.duration)}
-                            </p>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="mt-8 grid gap-5 sm:grid-cols-2">
                     <BookingField
-                      label="Appointment Date"
-                      htmlFor="appointmentDate"
-                      hint="Calendar is interpreted in Eastern Time."
+                      label="Email"
+                      htmlFor="email"
                       input={
                         <input
-                          id="appointmentDate"
-                          name="appointmentDate"
-                          type="date"
-                          min={minimumBookingDate}
-                          value={bookingForm.appointmentDate}
+                          id="email"
+                          name="email"
+                          type="email"
+                          autoComplete="email"
+                          value={bookingForm.email}
                           onChange={handleBookingFieldChange}
+                          placeholder="guest@example.com"
                           required
-                          className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15"
+                          className={bookingInputClassName}
                         />
                       }
                     />
-                    <BookingField
-                      label="Start Time"
-                      htmlFor="appointmentTime"
-                      hint={availability.scheduleLabel || 'Choose a date first.'}
-                      input={
-                        <select
-                          id="appointmentTime"
-                          name="appointmentTime"
-                          value={activeAppointmentTime}
-                          onChange={handleBookingFieldChange}
-                          required
-                          disabled={!availability.slots.length}
-                          className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
-                        >
-                          <option value="">
-                            {availability.slots.length ? 'Select a start time' : 'No start times available'}
-                          </option>
-                          {availability.slots.map((slot) => (
-                            <option key={slot.value} value={slot.value}>
-                              {slot.label}
-                            </option>
-                          ))}
-                        </select>
-                      }
-                    />
-                  </div>
 
-                  <div className="mt-5 rounded-[1.2rem] border border-slate-200 bg-slate-50/80 p-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
-                      Availability Note
-                    </p>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">{availability.notice}</p>
-                  </div>
-
-                  <div className="mt-5 rounded-[1.2rem] border border-brand-gold/30 bg-brand-gold/8 p-5">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
-                      <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-charcoal/65">
-                          Submission Preview
+                    <div>
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-[12px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                          Service Selection
                         </p>
-                        <p className="mt-3 text-lg font-semibold tracking-[-0.02em] text-slate-900">
-                          {selectedService.title}
-                        </p>
+                        <span className="text-sm text-slate-500">
+                          {formatServiceDuration(selectedService.duration)}
+                        </span>
                       </div>
-                      <span className="rounded-full border border-brand-gold/30 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-brand-charcoal">
-                        {formatServiceDuration(selectedService.duration)}
-                      </span>
+
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        {services.map((service) => {
+                          const isActive = bookingForm.serviceName === service.title
+
+                          return (
+                            <button
+                              key={service.title}
+                              type="button"
+                              aria-pressed={isActive}
+                              onClick={() => handleServiceSelection(service.title)}
+                              className={`rounded-[5px] border p-4 text-left transition ${
+                                isActive
+                                  ? 'border-slate-950 bg-slate-950 text-white shadow-[0_18px_45px_rgba(15,23,42,0.1)]'
+                                  : 'border-slate-200 bg-white hover:border-slate-400 hover:bg-slate-50'
+                              }`}
+                            >
+                              <p
+                                className={`text-base font-semibold tracking-[-0.02em] ${
+                                  isActive ? 'text-white' : 'text-slate-900'
+                                }`}
+                              >
+                                {service.title}
+                              </p>
+                              <p
+                                className={`mt-2 text-sm leading-6 ${
+                                  isActive ? 'text-white/72' : 'text-slate-500'
+                                }`}
+                              >
+                                {formatServiceDuration(service.duration)}
+                              </p>
+                            </button>
+                          )
+                        })}
+                      </div>
                     </div>
 
-                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                      <BookingStat label="Start" value={bookingPreview?.startLabel ?? 'Pending date and time'} />
-                      <BookingStat label="End" value={bookingPreview?.endLabel ?? 'Calculated after selection'} />
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <BookingField
+                        label="Appointment Date"
+                        htmlFor="appointmentDate"
+                        hint="Calendar is interpreted in Eastern Time."
+                        input={
+                          <input
+                            id="appointmentDate"
+                            name="appointmentDate"
+                            type="date"
+                            min={minimumBookingDate}
+                            value={bookingForm.appointmentDate}
+                            onChange={handleBookingFieldChange}
+                            required
+                            className={bookingInputClassName}
+                          />
+                        }
+                      />
+                      <BookingField
+                        label="Start Time"
+                        htmlFor="appointmentTime"
+                        hint={availability.scheduleLabel || 'Choose a date first.'}
+                        input={
+                          <select
+                            id="appointmentTime"
+                            name="appointmentTime"
+                            value={activeAppointmentTime}
+                            onChange={handleBookingFieldChange}
+                            required
+                            disabled={!availability.slots.length}
+                            className={bookingSelectClassName}
+                          >
+                            <option value="">
+                              {availability.slots.length ? 'Select a start time' : 'No start times available'}
+                            </option>
+                            {availability.slots.map((slot) => (
+                              <option key={slot.value} value={slot.value}>
+                                {slot.label}
+                              </option>
+                            ))}
+                          </select>
+                        }
+                      />
                     </div>
                   </div>
 
-                  {bookingRequestState.type !== 'idle' && (
-                    <p
-                      className={`mt-5 rounded-[1rem] border px-4 py-3 text-sm leading-6 ${
-                        bookingRequestState.type === 'success'
-                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                          : bookingRequestState.type === 'error'
-                            ? 'border-rose-200 bg-rose-50 text-rose-700'
-                            : 'border-slate-200 bg-slate-50 text-slate-600'
-                      }`}
-                    >
-                      {bookingRequestState.message}
-                    </p>
-                  )}
+                  <div className="flex flex-col gap-5 border-t border-slate-200 pt-8 xl:border-l xl:border-t-0 xl:pl-8 xl:pt-0">
+                    <div className="rounded-[5px] border border-slate-200 bg-slate-50 p-5">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                        Availability Note
+                      </p>
+                      <p className="mt-3 text-sm leading-6 text-slate-600">{availability.notice}</p>
+                    </div>
 
-                  <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="max-w-md text-sm leading-6 text-slate-500">
-                      By submitting, you are requesting a confirmed appointment tied to the
-                      salon&apos;s exact Eastern Time schedule.
-                    </p>
-                    <button
-                      type="submit"
-                      disabled={bookingRequestState.type === 'loading'}
-                      className="inline-flex items-center justify-center rounded-full bg-slate-900 px-7 py-4 text-[13px] font-extrabold uppercase tracking-[0.18em] text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
-                    >
-                      {bookingRequestState.type === 'loading'
-                        ? 'Securing Appointment'
-                        : 'Confirm Appointment'}
-                    </button>
+                    <div className="rounded-[5px] border border-slate-200 bg-slate-50 p-5">
+                      <div className="flex flex-wrap items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                            Appointment Summary
+                          </p>
+                          <p className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-slate-950">
+                            {selectedService.title}
+                          </p>
+                        </div>
+                        <span className="rounded-[5px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">
+                          {formatServiceDuration(selectedService.duration)}
+                        </span>
+                      </div>
+
+                      <div className="mt-4 grid gap-4">
+                        <BookingStat label="Start" value={bookingPreview?.startLabel ?? 'Pending date and time'} />
+                        <BookingStat label="End" value={bookingPreview?.endLabel ?? 'Calculated after selection'} />
+                      </div>
+                    </div>
+
+                    {bookingRequestState.type !== 'idle' && (
+                      <p
+                        className={`rounded-[5px] border px-4 py-3 text-sm leading-6 ${
+                          bookingRequestState.type === 'success'
+                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                            : bookingRequestState.type === 'error'
+                              ? 'border-rose-200 bg-rose-50 text-rose-700'
+                              : 'border-slate-200 bg-slate-50 text-slate-600'
+                        }`}
+                      >
+                        {bookingRequestState.message}
+                      </p>
+                    )}
+
+                    <div className="mt-auto rounded-[5px] border border-slate-200 bg-white p-5">
+                      <p className="text-sm leading-6 text-slate-500">
+                        By submitting, you are requesting a confirmed appointment tied to the
+                        salon&apos;s exact Eastern Time schedule.
+                      </p>
+                      <button
+                        type="submit"
+                        disabled={bookingRequestState.type === 'loading'}
+                        className="mt-5 inline-flex w-full items-center justify-center rounded-[5px] bg-slate-950 px-7 py-4 text-[13px] font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                      >
+                        {bookingRequestState.type === 'loading'
+                          ? 'Securing Appointment'
+                          : 'Confirm Appointment'}
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -807,7 +823,7 @@ function App() {
                 without losing individuality.
               </p>
 
-              <div className="mt-8 rounded-[1.7rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+              <div className="mt-8 rounded-[5px] border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                 <p className="font-script text-4xl text-brand-gold sm:text-5xl">Haus of Beauty</p>
                 <p className="mt-3 font-display text-3xl leading-tight text-white">
                   Beautiful hair should feel intentional, effortless, and entirely your own.
@@ -819,9 +835,9 @@ function App() {
               {features.map((feature) => (
                 <article
                   key={feature.title}
-                  className="rounded-[1.6rem] border border-white/10 bg-white/6 p-6 backdrop-blur-sm"
+                  className="rounded-[5px] border border-white/10 bg-white/6 p-6 backdrop-blur-sm"
                 >
-                  <div className="h-1 w-16 rounded-full bg-brand-gold" />
+                  <div className="h-1 w-16 rounded-[5px] bg-brand-gold" />
                   <h3 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">
                     {feature.title}
                   </h3>
@@ -1212,7 +1228,7 @@ function BookingField({ label, htmlFor, hint, input, className = '' }) {
 
 function BookingStat({ label, value }) {
   return (
-    <div className="rounded-[1rem] border border-slate-200 bg-white/85 p-4">
+    <div className="rounded-[5px] border border-slate-200 bg-white p-4">
       <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
         {label}
       </p>
@@ -1252,7 +1268,7 @@ function SectionBadge({ children, light = false }) {
 
   return (
     <span
-      className={`inline-flex w-fit items-center rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] ${classes}`}
+      className={`inline-flex w-fit items-center rounded-[5px] border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] ${classes}`}
     >
       {children}
     </span>
