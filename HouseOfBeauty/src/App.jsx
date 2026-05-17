@@ -1,5 +1,41 @@
 import { useEffect, useRef, useState } from 'react'
 
+const bookingSectionId = 'booking'
+const bookingSectionHref = `#${bookingSectionId}`
+const salonTimeZone = 'America/New_York'
+const appointmentApiPath = import.meta.env.VITE_APPOINTMENTS_API_URL?.trim() || '/api/appointments'
+const onlineBookingLeadTimeMinutes = 30
+const onlineBookingSlotIntervalMinutes = 30
+
+const salonDateTimePartsFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: salonTimeZone,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+  hourCycle: 'h23',
+})
+
+const salonReadableDateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: salonTimeZone,
+  weekday: 'short',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZoneName: 'short',
+})
+
+const utcReadableDateFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+})
+
 const salonAddress = '423 Boulevard, Hasbrouck Heights, NJ 07604'
 const salonMapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(salonAddress)}`
 const navLinks = [
@@ -14,7 +50,7 @@ const contactEmail = 'info@wendyossersbeauty.com'
 const footerMenuLinks = [
   { label: 'About Us', href: '#about' },
   { label: 'FAQ', href: '#contact' },
-  { label: 'Online Booking', href: contactPhoneHref },
+  { label: 'Online Booking', href: bookingSectionHref },
   { label: 'Contact Us', href: '#contact' },
   { label: 'Accessibility Notice', href: '#contact' },
 ]
@@ -70,31 +106,6 @@ const services = [
   },
 ]
 
-const galleryCards = [
-  {
-    eyebrow: 'Look 01',
-    title: 'Dimensional color with a glossy, editorial finish.',
-    description:
-      'A gallery space ready for balayage reveals, lived-in blonde work, and polished transformations.',
-    gradient: 'from-stone-200 via-white to-amber-100',
-    layout: 'lg:col-span-2',
-  },
-  {
-    eyebrow: 'Look 02',
-    title: 'Bridal beauty with soft structure and modern elegance.',
-    description:
-      'Ideal for updos, makeup highlights, and close-up bridal preparation imagery.',
-    gradient: 'from-[#efe3cf] via-white to-stone-100',
-  },
-  {
-    eyebrow: 'Look 03',
-    title: 'Texture-aware styling for every hair type and finish.',
-    description:
-      'A refined placeholder for curls, smoothing treatments, and silk-press style results.',
-    gradient: 'from-stone-100 via-[#f8f4ed] to-[#ead5a6]',
-  },
-]
-
 const features = [
   {
     title: 'Bilingual consultations',
@@ -146,8 +157,31 @@ const footerInfoColumns = [
 
 function App() {
   const heroRef = useRef(null)
+  const bookingSectionRef = useRef(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isHeroExpanded, setIsHeroExpanded] = useState(true)
+  const [bookingForm, setBookingForm] = useState(() => createInitialBookingForm())
+  const [bookingRequestState, setBookingRequestState] = useState({
+    type: 'idle',
+    message: '',
+  })
+
+  const selectedService =
+    services.find((service) => service.title === bookingForm.serviceName) ?? services[0]
+  const minimumBookingDate = getCurrentSalonDateString()
+  const availability = buildOnlineBookingAvailability(
+    bookingForm.appointmentDate,
+    selectedService.duration
+  )
+  const hasActiveAppointmentTime = availability.slots.some(
+    (slot) => slot.value === bookingForm.appointmentTime
+  )
+  const activeAppointmentTime = hasActiveAppointmentTime ? bookingForm.appointmentTime : ''
+  const bookingPreview = buildBookingPreview(
+    bookingForm.appointmentDate,
+    activeAppointmentTime,
+    selectedService.duration
+  )
 
   const handleNavLinkClick = (event, link) => {
     if (link.external) {
@@ -161,6 +195,168 @@ function App() {
 
     if (isMenuOpen) {
       setIsMenuOpen(false)
+    }
+  }
+
+  const handleBookingFieldChange = (event) => {
+    const { name, value } = event.target
+
+    setBookingForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }))
+
+    setBookingRequestState((currentState) =>
+      currentState.type === 'error' ? { type: 'idle', message: '' } : currentState
+    )
+  }
+
+  const handleServiceSelection = (serviceTitle, shouldScroll = false) => {
+    setBookingForm((currentForm) => ({
+      ...currentForm,
+      serviceName: serviceTitle,
+    }))
+
+    setBookingRequestState((currentState) =>
+      currentState.type === 'error' ? { type: 'idle', message: '' } : currentState
+    )
+
+    if (shouldScroll) {
+      bookingSectionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  }
+
+  const handleBookingSubmit = async (event) => {
+    event.preventDefault()
+
+    if (!bookingForm.customerName.trim()) {
+      setBookingRequestState({
+        type: 'error',
+        message: 'Please enter the guest name before booking.',
+      })
+      return
+    }
+
+    if (!bookingForm.appointmentDate) {
+      setBookingRequestState({
+        type: 'error',
+        message: 'Please choose an appointment date.',
+      })
+      return
+    }
+
+    if (bookingForm.appointmentDate < minimumBookingDate) {
+      setBookingRequestState({
+        type: 'error',
+        message: 'Please choose a date that is today or later in Eastern Time.',
+      })
+      return
+    }
+
+    if (availability.isClosedDay) {
+      setBookingRequestState({
+        type: 'error',
+        message:
+          'Online booking is unavailable on Sunday and Monday. Please call the salon to request that visit.',
+      })
+      return
+    }
+
+    if (!activeAppointmentTime) {
+      setBookingRequestState({
+        type: 'error',
+        message: 'Please select an available start time.',
+      })
+      return
+    }
+
+    if (!availability.slots.some((slot) => slot.value === activeAppointmentTime)) {
+      setBookingRequestState({
+        type: 'error',
+        message: 'That start time is no longer available in the online booking window.',
+      })
+      return
+    }
+
+    let startTime
+
+    try {
+      startTime = buildSalonStartTimestamp(
+        bookingForm.appointmentDate,
+        activeAppointmentTime
+      )
+    } catch (error) {
+      setBookingRequestState({
+        type: 'error',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'The selected appointment time could not be converted to salon time.',
+      })
+      return
+    }
+
+    setBookingRequestState({
+      type: 'loading',
+      message: 'Securing your appointment now.',
+    })
+
+    try {
+      const response = await fetch(appointmentApiPath, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerName: bookingForm.customerName.trim(),
+          email: bookingForm.email.trim(),
+          phone: bookingForm.phone.trim(),
+          serviceName: selectedService.title,
+          startTime,
+          duration: selectedService.duration,
+        }),
+      })
+
+      let payload = null
+
+      try {
+        payload = await response.json()
+      } catch {
+        payload = null
+      }
+
+      if (!response.ok) {
+        throw new Error(payload?.error ?? 'Unable to create the appointment right now.')
+      }
+
+      if (!payload?.data) {
+        throw new Error('The booking service returned an empty response.')
+      }
+
+      setBookingRequestState({
+        type: 'success',
+        message: 'Appointment confirmed. A conflict-safe booking has been created successfully.',
+      })
+      setBookingForm((currentForm) => ({
+        ...currentForm,
+        appointmentDate: '',
+        appointmentTime: '',
+      }))
+    } catch (error) {
+      const message =
+        error instanceof TypeError
+          ? 'The booking API is unreachable. Start the server or point VITE_APPOINTMENTS_API_URL to a live endpoint.'
+          : error instanceof Error
+            ? error.message
+            : 'Unable to create the appointment right now.'
+
+      setBookingRequestState({
+        type: 'error',
+        message,
+      })
     }
   }
 
@@ -210,14 +406,14 @@ function App() {
 
           <div className="site-header__actions hidden items-center gap-3 xl:flex">
             <a
-              href="tel:2013930944"
+              href={contactPhoneHref}
               className="whitespace-nowrap text-[15px] font-semibold uppercase tracking-[0.1em] text-slate-500 transition hover:text-slate-900"
             >
-              201-393-0944
+              {contactPhoneNumber}
             </a>
-           
+
             <a
-              href="tel:2013930944"
+              href={bookingSectionHref}
               className="whitespace-nowrap rounded-full border border-slate-900 px-5 py-3 text-[14px] font-semibold uppercase tracking-[0.12em] text-slate-900 transition duration-300 hover:bg-slate-900 hover:text-white"
             >
               Book Appointment
@@ -265,9 +461,9 @@ function App() {
                 </a>
               ))}
               <div className="flex flex-col gap-4 border-t border-slate-200 pt-5">
-                
                 <a
-                  href="tel:2013930944"
+                  href={bookingSectionHref}
+                  onClick={() => setIsMenuOpen(false)}
                   className="rounded-full bg-slate-900 px-6 py-4 text-center text-base font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-slate-700"
                 >
                   Book Appointment
@@ -310,7 +506,7 @@ function App() {
             </p>
 
             <a
-              href="tel:2013930944"
+              href={bookingSectionHref}
               className="mt-9 inline-flex items-center justify-center rounded-[0.9rem] bg-white px-9 py-4 text-[15px] font-extrabold uppercase tracking-[0.24em] text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-stone-100"
             >
               Book Appointment
@@ -328,76 +524,269 @@ function App() {
               </h2>
             </div>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {services.map((service) => (
-                <article
-                  key={service.title}
-                  className="flex h-full flex-col rounded-[2px] bg-white p-6 shadow-[0_12px_32px_rgba(15,23,42,0.08)]"
-                >
-                  <h3 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900">
-                    {service.title}
-                  </h3>
-                  <p className="mt-3 text-base text-slate-600">
-                    {formatServiceDuration(service.duration)}
-                  </p>
-                  <p className="mt-3 text-[15px] leading-7 text-slate-600">
-                    {service.description}
-                  </p>
-                  <a
-                    href="tel:2013930944"
-                    className="mt-6 inline-flex w-fit items-center justify-center rounded-[2px] bg-slate-900 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-slate-700"
+              {services.map((service) => {
+                const isSelected = selectedService.title === service.title
+
+                return (
+                  <article
+                    key={service.title}
+                    className={`flex h-full flex-col rounded-[2px] border p-6 shadow-[0_12px_32px_rgba(15,23,42,0.08)] transition ${
+                      isSelected
+                        ? 'border-brand-gold/70 bg-brand-gold/5'
+                        : 'border-white bg-white'
+                    }`}
                   >
-                    Create Appointment
-                  </a>
-                </article>
-              ))}
+                    <h3 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900">
+                      {service.title}
+                    </h3>
+                    <p className="mt-3 text-base text-slate-600">
+                      {formatServiceDuration(service.duration)}
+                    </p>
+                    <p className="mt-3 text-[15px] leading-7 text-slate-600">
+                      {service.description}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => handleServiceSelection(service.title, true)}
+                      className={`mt-6 inline-flex w-fit items-center justify-center rounded-[2px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+                        isSelected
+                          ? 'bg-brand-gold text-brand-charcoal hover:bg-brand-gold-soft'
+                          : 'bg-slate-900 text-white hover:bg-slate-700'
+                      }`}
+                    >
+                      {isSelected ? 'Selected for Booking' : 'Book This Service'}
+                    </button>
+                  </article>
+                )
+              })}
             </div>
           </div>
         </section>
 
-        <section id="gallery" className="bg-stone-100 py-24 sm:py-28">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-2xl">
-                <SectionBadge light>Gallery Preview</SectionBadge>
-                <h2 className="mt-6 text-4xl font-extrabold tracking-[-0.05em] text-slate-900 sm:text-5xl">
-                  Polished placeholders for color reveals, bridal prep, and finish work.
-                </h2>
-              </div>
-              <p className="max-w-xl text-lg leading-8 text-slate-600">
-                A curated visual direction for luminous color, bridal softness, and texture-aware
-                styling in an elevated editorial layout.
-              </p>
-            </div>
+        <section
+          id={bookingSectionId}
+          ref={bookingSectionRef}
+          className="relative overflow-hidden bg-stone-100 py-24 sm:py-28"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(199,160,97,0.26),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(15,23,42,0.08),transparent_28%)]" />
+          <div className="mx-auto max-w-4xl px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/82 p-6 shadow-[0_28px_80px_rgba(15,23,42,0.12)] backdrop-blur-md sm:p-8">
+              <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(199,160,97,0.14),transparent_60%)]" />
+              <div className="relative">
+                <div className="flex flex-col gap-4 border-b border-slate-200/80 pb-6 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-brand-gold">
+                      Online Form
+                    </p>
+                    <h3 className="mt-4 text-3xl font-extrabold tracking-[-0.04em] text-slate-900">
+                      Create an appointment
+                    </h3>
+                  </div>
+                  <p className="max-w-sm text-sm leading-6 text-slate-500">
+                    Online slots follow salon hours only. Sunday and Monday requests should be
+                    handled by phone.
+                  </p>
+                </div>
 
-            <div className="mt-14 grid gap-6 lg:grid-cols-3">
-              {galleryCards.map((card) => (
-                <article
-                  key={card.eyebrow}
-                  className={`group overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ${card.layout ?? ''}`}
-                >
-                  <div
-                    className={`relative flex min-h-[320px] flex-col justify-between overflow-hidden rounded-[1.6rem] bg-gradient-to-br ${card.gradient} p-6`}
-                  >
-                    <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.25),transparent_40%,rgba(15,23,42,0.08)_100%)]" />
-                    <div className="absolute inset-y-0 left-[68%] hidden w-px bg-white/60 lg:block" />
-                    <div className="absolute -top-10 right-6 h-36 w-36 rounded-full bg-white/50 blur-3xl" />
-                    <div className="absolute bottom-10 left-8 h-28 w-28 rounded-full border border-white/70 bg-white/35 backdrop-blur-sm" />
+                <form onSubmit={handleBookingSubmit} className="mt-8">
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <BookingField
+                      label="Guest Name"
+                      htmlFor="customerName"
+                      input={
+                        <input
+                          id="customerName"
+                          name="customerName"
+                          type="text"
+                          autoComplete="name"
+                          value={bookingForm.customerName}
+                          onChange={handleBookingFieldChange}
+                          placeholder="Wendy Ossers Guest"
+                          required
+                          className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15"
+                        />
+                      }
+                    />
+                    <BookingField
+                      label="Phone"
+                      htmlFor="phone"
+                      input={
+                        <input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          autoComplete="tel"
+                          value={bookingForm.phone}
+                          onChange={handleBookingFieldChange}
+                          placeholder="+1 201 393 0944"
+                          required
+                          className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15"
+                        />
+                      }
+                    />
+                  </div>
 
-                    <div className="relative">
-                      <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-600">
-                        {card.eyebrow}
+                  <BookingField
+                    label="Email"
+                    htmlFor="email"
+                    className="mt-5"
+                    input={
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        value={bookingForm.email}
+                        onChange={handleBookingFieldChange}
+                        placeholder="guest@example.com"
+                        required
+                        className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15"
+                      />
+                    }
+                  />
+
+                  <div className="mt-8">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="text-[12px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                        Service Selection
                       </p>
+                      <span className="text-sm text-slate-500">
+                        {formatServiceDuration(selectedService.duration)}
+                      </span>
                     </div>
 
-                    <div className="relative rounded-[1.6rem] border border-white/70 bg-white/70 p-5 backdrop-blur-md transition duration-300 group-hover:-translate-y-1">
-                      <p className="font-display text-3xl leading-tight text-slate-900">
-                        {card.title}
-                      </p>
-                      <p className="mt-3 text-sm leading-6 text-slate-600">{card.description}</p>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      {services.map((service) => {
+                        const isActive = bookingForm.serviceName === service.title
+
+                        return (
+                          <button
+                            key={service.title}
+                            type="button"
+                            aria-pressed={isActive}
+                            onClick={() => handleServiceSelection(service.title)}
+                            className={`rounded-[1.2rem] border p-4 text-left transition ${
+                              isActive
+                                ? 'border-brand-gold bg-brand-gold/10 shadow-[0_10px_25px_rgba(199,160,97,0.12)]'
+                                : 'border-slate-200 bg-white hover:border-brand-gold/60 hover:bg-brand-gold/5'
+                            }`}
+                          >
+                            <p className="text-base font-semibold tracking-[-0.02em] text-slate-900">
+                              {service.title}
+                            </p>
+                            <p className="mt-2 text-sm leading-6 text-slate-500">
+                              {formatServiceDuration(service.duration)}
+                            </p>
+                          </button>
+                        )
+                      })}
                     </div>
                   </div>
-                </article>
-              ))}
+
+                  <div className="mt-8 grid gap-5 sm:grid-cols-2">
+                    <BookingField
+                      label="Appointment Date"
+                      htmlFor="appointmentDate"
+                      hint="Calendar is interpreted in Eastern Time."
+                      input={
+                        <input
+                          id="appointmentDate"
+                          name="appointmentDate"
+                          type="date"
+                          min={minimumBookingDate}
+                          value={bookingForm.appointmentDate}
+                          onChange={handleBookingFieldChange}
+                          required
+                          className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15"
+                        />
+                      }
+                    />
+                    <BookingField
+                      label="Start Time"
+                      htmlFor="appointmentTime"
+                      hint={availability.scheduleLabel || 'Choose a date first.'}
+                      input={
+                        <select
+                          id="appointmentTime"
+                          name="appointmentTime"
+                          value={activeAppointmentTime}
+                          onChange={handleBookingFieldChange}
+                          required
+                          disabled={!availability.slots.length}
+                          className="mt-2 w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+                        >
+                          <option value="">
+                            {availability.slots.length ? 'Select a start time' : 'No start times available'}
+                          </option>
+                          {availability.slots.map((slot) => (
+                            <option key={slot.value} value={slot.value}>
+                              {slot.label}
+                            </option>
+                          ))}
+                        </select>
+                      }
+                    />
+                  </div>
+
+                  <div className="mt-5 rounded-[1.2rem] border border-slate-200 bg-slate-50/80 p-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                      Availability Note
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">{availability.notice}</p>
+                  </div>
+
+                  <div className="mt-5 rounded-[1.2rem] border border-brand-gold/30 bg-brand-gold/8 p-5">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-charcoal/65">
+                          Submission Preview
+                        </p>
+                        <p className="mt-3 text-lg font-semibold tracking-[-0.02em] text-slate-900">
+                          {selectedService.title}
+                        </p>
+                      </div>
+                      <span className="rounded-full border border-brand-gold/30 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-brand-charcoal">
+                        {formatServiceDuration(selectedService.duration)}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                      <BookingStat label="Start" value={bookingPreview?.startLabel ?? 'Pending date and time'} />
+                      <BookingStat label="End" value={bookingPreview?.endLabel ?? 'Calculated after selection'} />
+                    </div>
+                  </div>
+
+                  {bookingRequestState.type !== 'idle' && (
+                    <p
+                      className={`mt-5 rounded-[1rem] border px-4 py-3 text-sm leading-6 ${
+                        bookingRequestState.type === 'success'
+                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                          : bookingRequestState.type === 'error'
+                            ? 'border-rose-200 bg-rose-50 text-rose-700'
+                            : 'border-slate-200 bg-slate-50 text-slate-600'
+                      }`}
+                    >
+                      {bookingRequestState.message}
+                    </p>
+                  )}
+
+                  <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="max-w-md text-sm leading-6 text-slate-500">
+                      By submitting, you are requesting a confirmed appointment tied to the
+                      salon&apos;s exact Eastern Time schedule.
+                    </p>
+                    <button
+                      type="submit"
+                      disabled={bookingRequestState.type === 'loading'}
+                      className="inline-flex items-center justify-center rounded-full bg-slate-900 px-7 py-4 text-[13px] font-extrabold uppercase tracking-[0.18em] text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+                    >
+                      {bookingRequestState.type === 'loading'
+                        ? 'Securing Appointment'
+                        : 'Confirm Appointment'}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </section>
@@ -511,6 +900,275 @@ function App() {
   )
 }
 
+function createInitialBookingForm() {
+  return {
+    customerName: '',
+    email: '',
+    phone: '',
+    serviceName: services[0].title,
+    appointmentDate: '',
+    appointmentTime: '',
+  }
+}
+
+function buildOnlineBookingAvailability(dateString, serviceDurationMinutes) {
+  if (!dateString) {
+    return {
+      isClosedDay: false,
+      scheduleLabel: '',
+      notice: 'Choose a date to reveal available online start times.',
+      slots: [],
+    }
+  }
+
+  const schedule = getOnlineBookingSchedule(dateString)
+
+  if (!schedule) {
+    return {
+      isClosedDay: true,
+      scheduleLabel: 'Sunday and Monday requests are handled by phone.',
+      notice:
+        'Online booking is unavailable on Sunday and Monday. Please call the salon for by-appointment scheduling.',
+      slots: [],
+    }
+  }
+
+  let earliestStartMinutes = schedule.openMinutes
+  const latestStartMinutes = schedule.closeMinutes - serviceDurationMinutes
+
+  if (dateString === getCurrentSalonDateString()) {
+    const currentSalonClock = getCurrentSalonClockMinutes()
+    earliestStartMinutes = Math.max(
+      earliestStartMinutes,
+      roundUpToInterval(
+        currentSalonClock + onlineBookingLeadTimeMinutes,
+        onlineBookingSlotIntervalMinutes
+      )
+    )
+  }
+
+  if (latestStartMinutes < earliestStartMinutes) {
+    return {
+      isClosedDay: false,
+      scheduleLabel: schedule.label,
+      notice:
+        'No online start times remain for this day once the service duration is accounted for. Please choose another date or call the salon.',
+      slots: [],
+    }
+  }
+
+  const slots = []
+
+  for (
+    let slotMinutes = earliestStartMinutes;
+    slotMinutes <= latestStartMinutes;
+    slotMinutes += onlineBookingSlotIntervalMinutes
+  ) {
+    slots.push({
+      value: formatMinutesAs24HourTime(slotMinutes),
+      label: formatMinutesAsReadableTime(slotMinutes),
+    })
+  }
+
+  return {
+    isClosedDay: false,
+    scheduleLabel: schedule.label,
+    notice: `${slots.length} online start times are currently available for ${formatDateString(dateString)}. All times are shown in Eastern Time.`,
+    slots,
+  }
+}
+
+function buildBookingPreview(dateString, timeString, serviceDurationMinutes) {
+  if (!dateString || !timeString) {
+    return null
+  }
+
+  try {
+    const startTimestamp = buildSalonStartTimestamp(dateString, timeString)
+    const startDate = new Date(startTimestamp)
+    const endDate = new Date(startDate.getTime() + serviceDurationMinutes * 60_000)
+
+    return {
+      startLabel: formatSalonReadableDateTime(startDate),
+      endLabel: formatSalonReadableDateTime(endDate),
+    }
+  } catch {
+    return null
+  }
+}
+
+function getOnlineBookingSchedule(dateString) {
+  const weekday = getUtcWeekdayFromDateString(dateString)
+
+  if (weekday >= 2 && weekday <= 5) {
+    return {
+      openMinutes: 9 * 60,
+      closeMinutes: 19 * 60,
+      label: 'Tuesday to Friday, 9:00 am to 7:00 pm',
+    }
+  }
+
+  if (weekday === 6) {
+    return {
+      openMinutes: 8 * 60,
+      closeMinutes: 18 * 60,
+      label: 'Saturday, 8:00 am to 6:00 pm',
+    }
+  }
+
+  return null
+}
+
+function buildSalonStartTimestamp(dateString, timeString) {
+  const { year, month, day } = parseDateString(dateString)
+  const [hour, minute] = timeString.split(':').map(Number)
+
+  if (!Number.isInteger(hour) || !Number.isInteger(minute)) {
+    throw new Error('Please choose a valid appointment time.')
+  }
+
+  let utcGuess = Date.UTC(year, month - 1, day, hour, minute, 0)
+  const targetWallClock = Date.UTC(year, month - 1, day, hour, minute, 0)
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const currentParts = getSalonDateTimeParts(new Date(utcGuess))
+    const currentWallClock = Date.UTC(
+      currentParts.year,
+      currentParts.month - 1,
+      currentParts.day,
+      currentParts.hour,
+      currentParts.minute,
+      currentParts.second
+    )
+
+    utcGuess += targetWallClock - currentWallClock
+  }
+
+  const resolvedDate = new Date(utcGuess)
+  const resolvedParts = getSalonDateTimeParts(resolvedDate)
+
+  if (
+    resolvedParts.year !== year ||
+    resolvedParts.month !== month ||
+    resolvedParts.day !== day ||
+    resolvedParts.hour !== hour ||
+    resolvedParts.minute !== minute
+  ) {
+    throw new Error(
+      'The selected appointment time is not valid in the salon time zone. Please choose another slot.'
+    )
+  }
+
+  const offsetMinutes = getSalonTimeOffsetMinutes(resolvedDate)
+
+  return formatIsoTimestampWithOffset(resolvedDate, offsetMinutes)
+}
+
+function getSalonDateTimeParts(date) {
+  const parts = salonDateTimePartsFormatter.formatToParts(date)
+
+  return {
+    year: Number(parts.find((part) => part.type === 'year')?.value),
+    month: Number(parts.find((part) => part.type === 'month')?.value),
+    day: Number(parts.find((part) => part.type === 'day')?.value),
+    hour: Number(parts.find((part) => part.type === 'hour')?.value),
+    minute: Number(parts.find((part) => part.type === 'minute')?.value),
+    second: Number(parts.find((part) => part.type === 'second')?.value),
+  }
+}
+
+function getSalonTimeOffsetMinutes(date) {
+  const parts = getSalonDateTimeParts(date)
+  const equivalentUtcTimestamp = Date.UTC(
+    parts.year,
+    parts.month - 1,
+    parts.day,
+    parts.hour,
+    parts.minute,
+    parts.second
+  )
+
+  return Math.round((equivalentUtcTimestamp - date.getTime()) / 60_000)
+}
+
+function formatIsoTimestampWithOffset(date, offsetMinutes) {
+  const parts = getSalonDateTimeParts(date)
+
+  return `${parts.year}-${padNumber(parts.month)}-${padNumber(parts.day)}T${padNumber(
+    parts.hour
+  )}:${padNumber(parts.minute)}:${padNumber(parts.second)}${formatOffset(offsetMinutes)}`
+}
+
+function getCurrentSalonDateString() {
+  const parts = getSalonDateTimeParts(new Date())
+
+  return `${parts.year}-${padNumber(parts.month)}-${padNumber(parts.day)}`
+}
+
+function getCurrentSalonClockMinutes() {
+  const parts = getSalonDateTimeParts(new Date())
+  return parts.hour * 60 + parts.minute
+}
+
+function parseDateString(dateString) {
+  const [year, month, day] = dateString.split('-').map(Number)
+
+  return {
+    year,
+    month,
+    day,
+  }
+}
+
+function getUtcWeekdayFromDateString(dateString) {
+  const { year, month, day } = parseDateString(dateString)
+
+  return new Date(Date.UTC(year, month - 1, day)).getUTCDay()
+}
+
+function formatDateString(dateString) {
+  const { year, month, day } = parseDateString(dateString)
+
+  return utcReadableDateFormatter.format(new Date(Date.UTC(year, month - 1, day)))
+}
+
+function roundUpToInterval(value, interval) {
+  return Math.ceil(value / interval) * interval
+}
+
+function formatMinutesAs24HourTime(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+
+  return `${padNumber(hours)}:${padNumber(minutes)}`
+}
+
+function formatMinutesAsReadableTime(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+  const normalizedHours = hours % 12 || 12
+  const meridiem = hours >= 12 ? 'PM' : 'AM'
+
+  return `${normalizedHours}:${padNumber(minutes)} ${meridiem}`
+}
+
+function formatSalonReadableDateTime(date) {
+  return salonReadableDateTimeFormatter.format(date)
+}
+
+function formatOffset(offsetMinutes) {
+  const sign = offsetMinutes >= 0 ? '+' : '-'
+  const absoluteMinutes = Math.abs(offsetMinutes)
+  const hours = Math.floor(absoluteMinutes / 60)
+  const minutes = absoluteMinutes % 60
+
+  return `${sign}${padNumber(hours)}:${padNumber(minutes)}`
+}
+
+function padNumber(value) {
+  return String(value).padStart(2, '0')
+}
+
 function formatServiceDuration(minutes) {
   if (minutes <= 59) {
     return `Approx. ${minutes} min`
@@ -540,6 +1198,29 @@ function HeroWordmark() {
   )
 }
 
+function BookingField({ label, htmlFor, hint, input, className = '' }) {
+  return (
+    <label htmlFor={htmlFor} className={className}>
+      <span className="text-[12px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+        {label}
+      </span>
+      {input}
+      {hint ? <span className="mt-2 block text-xs leading-5 text-slate-400">{hint}</span> : null}
+    </label>
+  )
+}
+
+function BookingStat({ label, value }) {
+  return (
+    <div className="rounded-[1rem] border border-slate-200 bg-white/85 p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
+        {label}
+      </p>
+      <p className="mt-2 text-sm leading-6 text-slate-700">{value}</p>
+    </div>
+  )
+}
+
 function FooterInfoLine({ item }) {
   if (item.href) {
     const linkProps = item.external
@@ -561,9 +1242,7 @@ function FooterInfoLine({ item }) {
     )
   }
 
-  return (
-    <p>{item.text}</p>
-  )
+  return <p>{item.text}</p>
 }
 
 function SectionBadge({ children, light = false }) {
