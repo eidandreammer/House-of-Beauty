@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 
 const bookingSectionId = 'booking'
 const bookingSectionHref = `#${bookingSectionId}`
@@ -62,6 +62,37 @@ const socialLinks = [
 ]
 
 const heroBackgroundPath = '/imgs/HeroSectionBackground.jpg'
+const galleryMotionSpeedFactor = 2
+const galleryImagesPerRow = 6
+const galleryImagePaths = [
+  '/imgs/Gallery/alexander-krivitskiy-qNmd3d6Tbd4-unsplash.jpg',
+  '/imgs/Gallery/alexander-krivitskiy-VRnw9I1lyiY-unsplash.jpg',
+  '/imgs/Gallery/ari-kurniawan-qVZNmigGmFE-unsplash.jpg',
+  '/imgs/Gallery/baylee-gramling-a3xr2mVjT5M-unsplash.jpg',
+  '/imgs/Gallery/bryony-elena-KZKbGgQPCtU-unsplash.jpg',
+  '/imgs/Gallery/daria-andriianova-Gz-VhK3thas-unsplash.jpg',
+  '/imgs/Gallery/frank-flores-e7s6Nk-fXSw-unsplash.jpg',
+  '/imgs/Gallery/imran-creator-XJjiUGa0cz0-unsplash.jpg',
+  '/imgs/Gallery/konstantin-shmatov-Hcslayhkdas-unsplash.jpg',
+  '/imgs/Gallery/mia-mocchi-zCS-RvOKQjc-unsplash.jpg',
+  '/imgs/Gallery/noel-oviedo-AsCw567xezY-unsplash.jpg',
+  '/imgs/Gallery/paloma-lamadreinspirada-TBmNnhIFDeg-unsplash.jpg',
+  '/imgs/Gallery/premium_photo-1674100452334-0a684c7055af.avif',
+  '/imgs/Gallery/premium_photo-1737364323773-b29511227f2a.avif',
+  '/imgs/Gallery/taylor-smith-zz-UAKRabJs-unsplash.jpg',
+  '/imgs/Gallery/yan-kolesnyk-iY1HOe0RQ7Y-unsplash.jpg',
+]
+const galleryBaseRowConfigs = [
+  { id: 'gallery-row-1', direction: 'left', baseDurationSeconds: 136 },
+  { id: 'gallery-row-2', direction: 'right', baseDurationSeconds: 152 },
+  { id: 'gallery-row-3', direction: 'left', baseDurationSeconds: 144 },
+]
+const galleryRowConfigs = galleryBaseRowConfigs.map(
+  ({ baseDurationSeconds, ...config }) => ({
+    ...config,
+    durationSeconds: baseDurationSeconds / galleryMotionSpeedFactor,
+  })
+)
 
 const services = [
   {
@@ -157,9 +188,13 @@ const footerInfoColumns = [
 
 function App() {
   const heroRef = useRef(null)
+  const gallerySectionRef = useRef(null)
   const bookingSectionRef = useRef(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isHeroExpanded, setIsHeroExpanded] = useState(true)
+  const [galleryRows] = useState(createGalleryRows)
+  const [isGalleryActive, setIsGalleryActive] = useState(false)
+  const [hasGalleryEnteredView, setHasGalleryEnteredView] = useState(false)
   const [bookingForm, setBookingForm] = useState(() => createInitialBookingForm())
   const [bookingRequestState, setBookingRequestState] = useState({
     type: 'idle',
@@ -384,10 +419,39 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const galleryElement = gallerySectionRef.current
+
+    if (!galleryElement || typeof IntersectionObserver === 'undefined') {
+      setHasGalleryEnteredView(true)
+      setIsGalleryActive(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isVisible = entry.isIntersecting
+        setIsGalleryActive(isVisible)
+
+        if (isVisible) {
+          setHasGalleryEnteredView(true)
+        }
+      },
+      {
+        threshold: 0.01,
+        rootMargin: '240px 0px',
+      }
+    )
+
+    observer.observe(galleryElement)
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <header
-        className={`site-header fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl ${
+        className={`site-header fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/95 ${
           isHeroExpanded ? 'site-header--hero' : 'site-header--compact'
         }`}
       >
@@ -478,7 +542,7 @@ function App() {
       </header>
 
       <section ref={heroRef} className="relative min-h-screen overflow-hidden bg-white text-slate-900">
-        <div className="hero-backdrop-fade absolute inset-0">
+        <div className="absolute inset-0">
           <div
             className="absolute inset-0"
             style={{
@@ -519,7 +583,14 @@ function App() {
       </section>
 
       <main>
-        <section id="services" className="relative bg-white py-24 sm:py-28">
+        <GallerySection
+          sectionRef={gallerySectionRef}
+          rows={galleryRows}
+          isActive={isGalleryActive}
+          isReady={hasGalleryEnteredView}
+        />
+
+        <section id="services" className="content-section relative bg-white py-24 sm:py-28">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mb-10">
               <h2 className="text-4xl font-extrabold tracking-[-0.05em] text-slate-900 sm:text-5xl">
@@ -569,7 +640,7 @@ function App() {
         <section
           id={bookingSectionId}
           ref={bookingSectionRef}
-          className="relative overflow-hidden bg-slate-100 py-24 sm:py-28"
+          className="content-section relative overflow-hidden bg-slate-100 py-24 sm:py-28"
         >
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0))]" />
           <div className="mx-auto w-full px-6 lg:px-8">
@@ -584,10 +655,7 @@ function App() {
                       Create an appointment
                     </h3>
                   </div>
-                  <p className="max-w-sm text-sm leading-6 text-slate-500">
-                    Online slots follow salon hours only. Sunday and Monday requests should be
-                    handled by phone.
-                  </p>
+                  
                 </div>
 
                 <form
@@ -597,7 +665,7 @@ function App() {
                   <div className="space-y-8">
                     <div className="grid gap-5 sm:grid-cols-2">
                       <BookingField
-                        label="Guest Name"
+                        label="Name"
                         htmlFor="customerName"
                         input={
                           <input
@@ -607,7 +675,6 @@ function App() {
                             autoComplete="name"
                             value={bookingForm.customerName}
                             onChange={handleBookingFieldChange}
-                            placeholder="Wendy Ossers Guest"
                             required
                             className={bookingInputClassName}
                           />
@@ -624,7 +691,6 @@ function App() {
                             autoComplete="tel"
                             value={bookingForm.phone}
                             onChange={handleBookingFieldChange}
-                            placeholder="+1 201 393 0944"
                             required
                             className={bookingInputClassName}
                           />
@@ -643,7 +709,6 @@ function App() {
                           autoComplete="email"
                           value={bookingForm.email}
                           onChange={handleBookingFieldChange}
-                          placeholder="guest@example.com"
                           required
                           className={bookingInputClassName}
                         />
@@ -740,16 +805,10 @@ function App() {
                         }
                       />
                     </div>
+
                   </div>
 
                   <div className="flex flex-col gap-5 border-t border-slate-200 pt-8 xl:border-l xl:border-t-0 xl:pl-8 xl:pt-0">
-                    <div className="rounded-[5px] border border-slate-200 bg-slate-50 p-5">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500">
-                        Availability Note
-                      </p>
-                      <p className="mt-3 text-sm leading-6 text-slate-600">{availability.notice}</p>
-                    </div>
-
                     <div className="rounded-[5px] border border-slate-200 bg-slate-50 p-5">
                       <div className="flex flex-wrap items-start justify-between gap-4">
                         <div>
@@ -766,8 +825,14 @@ function App() {
                       </div>
 
                       <div className="mt-4 grid gap-4">
-                        <BookingStat label="Start" value={bookingPreview?.startLabel ?? 'Pending date and time'} />
-                        <BookingStat label="End" value={bookingPreview?.endLabel ?? 'Calculated after selection'} />
+                          <BookingStat
+                            label="Start"
+                            value={bookingPreview?.startLabel ?? 'Pending date and time'}
+                          />
+                          <BookingStat
+                            label="End"
+                            value={bookingPreview?.endLabel ?? 'Calculated after selection'}
+                          />
                       </div>
                     </div>
 
@@ -807,7 +872,10 @@ function App() {
           </div>
         </section>
 
-        <section id="about" className="relative overflow-hidden bg-brand-charcoal py-24 text-white sm:py-28">
+        <section
+          id="about"
+          className="content-section relative overflow-hidden bg-brand-charcoal py-24 text-white sm:py-28"
+        >
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(199,160,97,0.2),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.05),transparent_20%)]" />
 
           <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
@@ -823,7 +891,7 @@ function App() {
                 without losing individuality.
               </p>
 
-              <div className="mt-8 rounded-[5px] border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+              <div className="mt-8 rounded-[5px] border border-white/10 bg-white/5 p-6">
                 <p className="font-script text-4xl text-brand-gold sm:text-5xl">Haus of Beauty</p>
                 <p className="mt-3 font-display text-3xl leading-tight text-white">
                   Beautiful hair should feel intentional, effortless, and entirely your own.
@@ -835,7 +903,7 @@ function App() {
               {features.map((feature) => (
                 <article
                   key={feature.title}
-                  className="rounded-[5px] border border-white/10 bg-white/6 p-6 backdrop-blur-sm"
+                  className="rounded-[5px] border border-white/10 bg-white/6 p-6"
                 >
                   <div className="h-1 w-16 rounded-[5px] bg-brand-gold" />
                   <h3 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">
@@ -851,7 +919,7 @@ function App() {
         </section>
       </main>
 
-      <footer id="contact" className="bg-black py-[2.8rem] text-white sm:py-[3.2rem]">
+      <footer id="contact" className="content-section bg-black py-[2.8rem] text-white sm:py-[3.2rem]">
         <div className="mx-auto max-w-[1540px] px-8 sm:px-12 lg:px-16">
           <div className="grid gap-x-16 gap-y-6 lg:items-center lg:grid-cols-[1fr_1fr_0.9fr] xl:gap-x-24">
             {footerInfoColumns.map((column) => (
@@ -914,6 +982,101 @@ function App() {
       </footer>
     </div>
   )
+}
+
+const GallerySection = memo(function GallerySection({ sectionRef, rows, isActive, isReady }) {
+  return (
+    <section
+      id="gallery"
+      ref={sectionRef}
+      className="content-section gallery-section relative overflow-hidden bg-white py-24 sm:py-28"
+    >
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(199,160,97,0.2),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(22,25,31,0.08),transparent_30%)]" />
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="max-w-3xl">
+          <SectionBadge light>Gallery</SectionBadge>
+          <h2 className="mt-6 text-4xl font-extrabold tracking-[-0.05em] text-slate-900 sm:text-5xl">
+            A flowing look at recent salon beauty.
+          </h2>
+          <p className="mt-5 text-lg leading-8 text-slate-600">
+            Three continuous rows keep the work moving smoothly across the page with a
+            lighter, smoother animation load.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-12">
+        {isReady ? (
+          rows.map((row) => <GalleryMarqueeRow key={row.id} row={row} isActive={isActive} />)
+        ) : (
+          <div>
+            <div className="mx-auto h-[14rem] max-w-[1680px] rounded-[5px] border border-slate-200 bg-slate-100/80 sm:h-[16rem]" />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+})
+
+const GalleryMarqueeRow = memo(function GalleryMarqueeRow({ row, isActive }) {
+  return (
+    <div className={row.id === 'gallery-row-3' ? 'gallery-marquee-row--desktop-only' : ''}>
+      <div
+        className={`gallery-marquee mx-auto max-w-[1680px] rounded-[5px] border border-white/70 bg-white/92 p-3 shadow-[0_12px_28px_rgba(15,23,42,0.06)] sm:p-4 ${
+          row.direction === 'right' ? 'gallery-marquee--reverse' : ''
+        } ${
+          isActive ? '' : 'gallery-marquee--paused'
+        }`}
+        style={{ '--gallery-duration': `${row.durationSeconds}s` }}
+      >
+        <div className="gallery-marquee__track">
+          <GalleryMarqueeSet images={row.images} rowId={row.id} />
+          <GalleryMarqueeSet images={row.images} rowId={`${row.id}-duplicate`} duplicate />
+        </div>
+      </div>
+    </div>
+  )
+})
+
+const GalleryMarqueeSet = memo(function GalleryMarqueeSet({ images, rowId, duplicate = false }) {
+  return (
+    <ul className="gallery-marquee__set" aria-hidden={duplicate}>
+      {images.map((imagePath, index) => (
+        <li key={`${rowId}-${imagePath}`} className="gallery-marquee__item">
+          <figure className="gallery-marquee__card">
+            <img
+              src={imagePath}
+              alt={duplicate ? '' : `Salon gallery look ${index + 1}`}
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+              width="1600"
+              height="1200"
+              className="gallery-marquee__image"
+            />
+          </figure>
+        </li>
+      ))}
+    </ul>
+  )
+})
+
+function createGalleryRows() {
+  const shuffledImages = shuffleArray(galleryImagePaths)
+  const totalImagesNeeded = galleryRowConfigs.length * galleryImagesPerRow
+  const distributedImages = Array.from(
+    { length: totalImagesNeeded },
+    (_, index) => shuffledImages[index % shuffledImages.length]
+  )
+
+  return galleryRowConfigs.map((config, rowIndex) => ({
+    ...config,
+    images: distributedImages.slice(
+      galleryImagesPerRow * rowIndex,
+      galleryImagesPerRow * (rowIndex + 1)
+    ),
+  }))
 }
 
 function createInitialBookingForm() {
@@ -1199,6 +1362,19 @@ function formatServiceDuration(minutes) {
   }
 
   return `Approx. ${hours} ${hourLabel} ${remainingMinutes} min`
+}
+
+function shuffleArray(items) {
+  const copy = [...items]
+
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1))
+    const currentItem = copy[index]
+    copy[index] = copy[swapIndex]
+    copy[swapIndex] = currentItem
+  }
+
+  return copy
 }
 
 function HeroWordmark() {
