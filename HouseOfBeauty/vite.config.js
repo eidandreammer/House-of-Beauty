@@ -2,8 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+const projectPagesBasePath = '/House-of-Beauty/'
+
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? projectPagesBasePath : '/',
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
@@ -13,4 +16,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

@@ -1,16 +1,43 @@
-# React + Vite
+# House of Beauty
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Marketing site for Wendy Ossers Haus of Beauty, built with React and Vite.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Install dependencies and start the frontend:
 
-## React Compiler
+```bash
+npm install
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+To run the booking API locally as well:
 
-## Expanding the ESLint configuration
+```bash
+npm run server:start
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The frontend expects these environment variables:
+
+```bash
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+APP_ORIGIN=http://localhost:5173
+VITE_APPOINTMENTS_API_URL=/api/appointments
+PORT=8787
+```
+
+## GitHub Pages deployment
+
+This repo is configured to deploy the static frontend to GitHub Pages at:
+
+`https://eidandreammer.github.io/House-of-Beauty/`
+
+Deployment is handled by [`.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pages.yml).
+
+Important:
+
+- GitHub Pages only hosts the frontend.
+- The Express booking API in [`server/`](./server/) does not run on GitHub Pages.
+- To keep online booking active in production, add a repository secret named `VITE_APPOINTMENTS_API_URL` that points to a live API endpoint.
+- If that secret is not set, the site still deploys, but booking falls back to phone/email messaging instead of a broken form submission.

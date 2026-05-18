@@ -7,9 +7,16 @@ const gallerySectionHref = `#${gallerySectionId}`
 const bookingSectionId = 'booking'
 const bookingSectionHref = `#${bookingSectionId}`
 const salonTimeZone = 'America/New_York'
-const appointmentApiPath = import.meta.env.VITE_APPOINTMENTS_API_URL?.trim() || '/api/appointments'
+const siteBasePath = import.meta.env.BASE_URL
+const defaultAppointmentApiPath = import.meta.env.DEV ? '/api/appointments' : ''
+const appointmentApiPath =
+  import.meta.env.VITE_APPOINTMENTS_API_URL?.trim() || defaultAppointmentApiPath
 const onlineBookingLeadTimeMinutes = 30
 const onlineBookingSlotIntervalMinutes = 30
+const bookingUnavailableMessage =
+  'Online booking is not available on this website yet. Please call the salon or send an email request instead.'
+const bookingServiceUnavailableMessage =
+  'Online booking is temporarily unavailable. Please call the salon or send an email request instead.'
 
 const salonDateTimePartsFormatter = new Intl.DateTimeFormat('en-US', {
   timeZone: salonTimeZone,
@@ -66,26 +73,26 @@ const socialLinks = [
   { label: 'TikTok', href: 'https://www.tiktok.com/', platform: 'tiktok' },
 ]
 
-const heroBackgroundPath = '/imgs/HeroSectionBackground.jpg'
+const heroBackgroundPath = withBasePath('/imgs/HeroSectionBackground.jpg')
 const galleryMotionSpeedFactor = 2
 const galleryImagesPerRow = 6
 const galleryImagePaths = [
-  '/imgs/Gallery/alexander-krivitskiy-qNmd3d6Tbd4-unsplash.jpg',
-  '/imgs/Gallery/alexander-krivitskiy-VRnw9I1lyiY-unsplash.jpg',
-  '/imgs/Gallery/ari-kurniawan-qVZNmigGmFE-unsplash.jpg',
-  '/imgs/Gallery/baylee-gramling-a3xr2mVjT5M-unsplash.jpg',
-  '/imgs/Gallery/bryony-elena-KZKbGgQPCtU-unsplash.jpg',
-  '/imgs/Gallery/daria-andriianova-Gz-VhK3thas-unsplash.jpg',
-  '/imgs/Gallery/frank-flores-e7s6Nk-fXSw-unsplash.jpg',
-  '/imgs/Gallery/imran-creator-XJjiUGa0cz0-unsplash.jpg',
-  '/imgs/Gallery/konstantin-shmatov-Hcslayhkdas-unsplash.jpg',
-  '/imgs/Gallery/mia-mocchi-zCS-RvOKQjc-unsplash.jpg',
-  '/imgs/Gallery/noel-oviedo-AsCw567xezY-unsplash.jpg',
-  '/imgs/Gallery/paloma-lamadreinspirada-TBmNnhIFDeg-unsplash.jpg',
-  '/imgs/Gallery/premium_photo-1674100452334-0a684c7055af.avif',
-  '/imgs/Gallery/premium_photo-1737364323773-b29511227f2a.avif',
-  '/imgs/Gallery/taylor-smith-zz-UAKRabJs-unsplash.jpg',
-  '/imgs/Gallery/yan-kolesnyk-iY1HOe0RQ7Y-unsplash.jpg',
+  withBasePath('/imgs/Gallery/alexander-krivitskiy-qNmd3d6Tbd4-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/alexander-krivitskiy-VRnw9I1lyiY-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/ari-kurniawan-qVZNmigGmFE-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/baylee-gramling-a3xr2mVjT5M-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/bryony-elena-KZKbGgQPCtU-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/daria-andriianova-Gz-VhK3thas-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/frank-flores-e7s6Nk-fXSw-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/imran-creator-XJjiUGa0cz0-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/konstantin-shmatov-Hcslayhkdas-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/mia-mocchi-zCS-RvOKQjc-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/noel-oviedo-AsCw567xezY-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/paloma-lamadreinspirada-TBmNnhIFDeg-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/premium_photo-1674100452334-0a684c7055af.avif'),
+  withBasePath('/imgs/Gallery/premium_photo-1737364323773-b29511227f2a.avif'),
+  withBasePath('/imgs/Gallery/taylor-smith-zz-UAKRabJs-unsplash.jpg'),
+  withBasePath('/imgs/Gallery/yan-kolesnyk-iY1HOe0RQ7Y-unsplash.jpg'),
 ]
 const galleryBaseRowConfigs = [
   { id: 'gallery-row-1', direction: 'left', baseDurationSeconds: 136 },
@@ -139,29 +146,6 @@ const services = [
     title: 'Hair Extensions',
     duration: 210,
     description: 'Length and fullness enhancements designed for a seamless natural blend.',
-  },
-]
-
-const features = [
-  {
-    title: 'Bilingual consultations',
-    description:
-      'Clear, welcoming communication in English and Spanish from first inquiry to final styling advice.',
-  },
-  {
-    title: 'All textures welcome',
-    description:
-      'Services are tailored for straight, wavy, curly, coily, relaxed, and extension-enhanced hair.',
-  },
-  {
-    title: 'Luxury with intention',
-    description:
-      'Every appointment is personalized around maintenance goals, lifestyle, and the finish you want.',
-  },
-  {
-    title: 'Corrective expertise',
-    description:
-      'Thoughtful consultation and restorative color planning for guests ready to refine or reset their look.',
   },
 ]
 
@@ -222,6 +206,7 @@ function App() {
     activeAppointmentTime,
     selectedService.duration
   )
+  const isBookingSubmissionAvailable = Boolean(appointmentApiPath)
   const bookingInputClassName =
     'mt-2 w-full rounded-[5px] border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-4 focus:ring-slate-200/70'
   const bookingSelectClassName = `${bookingInputClassName} disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400`
@@ -274,6 +259,14 @@ function App() {
 
   const handleBookingSubmit = async (event) => {
     event.preventDefault()
+
+    if (!isBookingSubmissionAvailable) {
+      setBookingRequestState({
+        type: 'error',
+        message: bookingUnavailableMessage,
+      })
+      return
+    }
 
     if (!bookingForm.customerName.trim()) {
       setBookingRequestState({
@@ -391,7 +384,9 @@ function App() {
     } catch (error) {
       const message =
         error instanceof TypeError
-          ? 'The booking API is unreachable. Start the server or point VITE_APPOINTMENTS_API_URL to a live endpoint.'
+          ? import.meta.env.DEV
+            ? 'The booking API is unreachable. Start the server or point VITE_APPOINTMENTS_API_URL to a live endpoint.'
+            : bookingServiceUnavailableMessage
           : error instanceof Error
             ? error.message
             : 'Unable to create the appointment right now.'
@@ -859,14 +854,24 @@ function App() {
                         By submitting, you are requesting a confirmed appointment tied to the
                         salon&apos;s exact Eastern Time schedule.
                       </p>
+                      {!isBookingSubmissionAvailable && (
+                        <p className="mt-4 text-sm leading-6 text-slate-500">
+                          Online booking requests are currently handled by phone or email on
+                          this website.
+                        </p>
+                      )}
                       <button
                         type="submit"
-                        disabled={bookingRequestState.type === 'loading'}
+                        disabled={
+                          bookingRequestState.type === 'loading' || !isBookingSubmissionAvailable
+                        }
                         className="mt-5 inline-flex w-full items-center justify-center rounded-[5px] bg-slate-950 px-7 py-4 text-[13px] font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
                       >
-                        {bookingRequestState.type === 'loading'
-                          ? 'Securing Appointment'
-                          : 'Confirm Appointment'}
+                        {!isBookingSubmissionAvailable
+                          ? 'Book By Phone Or Email'
+                          : bookingRequestState.type === 'loading'
+                            ? 'Securing Appointment'
+                            : 'Confirm Appointment'}
                       </button>
                     </div>
                   </div>
@@ -1030,6 +1035,10 @@ function createGalleryRows() {
       galleryImagesPerRow * (rowIndex + 1)
     ),
   }))
+}
+
+function withBasePath(path) {
+  return `${siteBasePath}${path.replace(/^\/+/, '')}`
 }
 
 function createInitialBookingForm() {
