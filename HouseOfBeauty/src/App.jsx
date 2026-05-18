@@ -557,9 +557,7 @@ function App() {
         </div>
         <div className="relative mx-auto flex min-h-screen max-w-[1500px] items-end px-6 pb-10 pt-28 sm:px-8 sm:pb-12 sm:pt-32 lg:px-10 lg:pb-16 lg:pt-36">
           <div className="max-w-[560px]">
-            <p className="text-sm font-semibold uppercase tracking-[0.34em] text-brand-gold">
-              Luxury Hair Studio
-            </p>
+           
             <h1 className="mt-5 text-5xl font-extrabold uppercase leading-[0.9] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
               Refined Hair, Elevated Beauty
             </h1>
@@ -592,11 +590,7 @@ function App() {
 
         <section id="services" className="content-section relative bg-white py-24 sm:py-28">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mb-10">
-              <h2 className="text-4xl font-extrabold tracking-[-0.05em] text-slate-900 sm:text-5xl">
-                Our Services
-              </h2>
-            </div>
+            <SectionHeading title="Our Services" className="mb-10 max-w-3xl" />
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {services.map((service) => {
                 const isSelected = selectedService.title === service.title
@@ -646,16 +640,17 @@ function App() {
           <div className="mx-auto w-full px-6 lg:px-8">
             <div className="mx-auto w-full max-w-5xl xl:max-w-[75vw]">
               <div className="relative rounded-[5px] border border-slate-200 bg-white p-6 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:p-8 lg:p-10">
-                <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 lg:flex-row lg:items-end lg:justify-between">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500">
-                      Online Form
+                <div className="border-b border-slate-200 pb-6">
+                  <SectionHeading
+                    title="Book Your Appointment"
+                    className="max-w-3xl"
+                    bodyClassName="max-w-2xl"
+                  >
+                    <p>
+                      Choose your service, preferred date, and start time through the
+                      online form.
                     </p>
-                    <h3 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-950">
-                      Create an appointment
-                    </h3>
-                  </div>
-                  
+                  </SectionHeading>
                 </div>
 
                 <form
@@ -880,16 +875,23 @@ function App() {
 
           <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
             <div>
-              <SectionBadge>About the Salon</SectionBadge>
-              <h2 className="mt-6 text-4xl font-extrabold tracking-[-0.05em] text-white sm:text-5xl">
-                Personalized beauty for every texture, tone, and special moment.
-              </h2>
-              <p className="mt-6 text-lg leading-8 text-slate-300">
-                Wendy Ossers Haus of Beauty is positioned as a high-end salon experience that
-                stays warm and approachable. The space is designed to welcome a diverse clientele
-                with bilingual guidance, attentive consultation, and styling that feels polished
-                without losing individuality.
-              </p>
+              <SectionHeading
+                title="About the Salon"
+                light
+                className="max-w-3xl"
+                bodyClassName="max-w-3xl"
+              >
+                <p>
+                  Personalized beauty for every texture, tone, and special moment.
+                </p>
+                <p>
+                  Wendy Ossers Haus of Beauty is positioned as a high-end salon
+                  experience that stays warm and approachable. The space is designed to
+                  welcome a diverse clientele with bilingual guidance, attentive
+                  consultation, and styling that feels polished without losing
+                  individuality.
+                </p>
+              </SectionHeading>
 
               <div className="mt-8 rounded-[5px] border border-white/10 bg-white/5 p-6">
                 <p className="font-script text-4xl text-brand-gold sm:text-5xl">Haus of Beauty</p>
@@ -994,16 +996,9 @@ const GallerySection = memo(function GallerySection({ sectionRef, rows, isActive
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(199,160,97,0.2),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(22,25,31,0.08),transparent_30%)]" />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <SectionBadge light>Gallery</SectionBadge>
-          <h2 className="mt-6 text-4xl font-extrabold tracking-[-0.05em] text-slate-900 sm:text-5xl">
-            A flowing look at recent salon beauty.
-          </h2>
-          <p className="mt-5 text-lg leading-8 text-slate-600">
-            Three continuous rows keep the work moving smoothly across the page with a
-            lighter, smoother animation load.
-          </p>
-        </div>
+        <SectionHeading title="Our Gallery" className="max-w-4xl" bodyClassName="max-w-3xl">
+         
+        </SectionHeading>
       </div>
 
       <div className="mt-12">
@@ -1437,17 +1432,20 @@ function FooterInfoLine({ item }) {
   return <p>{item.text}</p>
 }
 
-function SectionBadge({ children, light = false }) {
-  const classes = light
-    ? 'border-brand-gold/30 bg-brand-gold/10 text-brand-charcoal'
-    : 'border-brand-gold/30 bg-white/5 text-brand-gold'
-
+function SectionHeading({
+  title,
+  children,
+  light = false,
+  className = '',
+  bodyClassName = '',
+}) {
   return (
-    <span
-      className={`inline-flex w-fit items-center rounded-[5px] border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] ${classes}`}
-    >
-      {children}
-    </span>
+    <div className={`section-heading ${light ? 'section-heading--light' : ''} ${className}`}>
+      <h2 className="section-heading__title">{title}</h2>
+      {children ? (
+        <div className={`section-heading__body ${bodyClassName}`}>{children}</div>
+      ) : null}
+    </div>
   )
 }
 
