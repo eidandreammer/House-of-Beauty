@@ -33,7 +33,7 @@ This repo is configured to deploy the static frontend to GitHub Pages at:
 
 `https://eidandreammer.github.io/House-of-Beauty/`
 
-Deployment is handled by [`.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pages.yml).
+Deployment is handled by [`../.github/workflows/deploy-house-of-beauty-pages.yml`](../.github/workflows/deploy-house-of-beauty-pages.yml).
 
 Important:
 
