@@ -1,5 +1,9 @@
 import { memo, useEffect, useRef, useState } from 'react'
 
+const heroSectionId = 'hero'
+const heroSectionHref = `#${heroSectionId}`
+const gallerySectionId = 'gallery'
+const gallerySectionHref = `#${gallerySectionId}`
 const bookingSectionId = 'booking'
 const bookingSectionHref = `#${bookingSectionId}`
 const salonTimeZone = 'America/New_York'
@@ -39,8 +43,9 @@ const utcReadableDateFormatter = new Intl.DateTimeFormat('en-US', {
 const salonAddress = '423 Boulevard, Hasbrouck Heights, NJ 07604'
 const salonMapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(salonAddress)}`
 const navLinks = [
+  { label: 'About', href: heroSectionHref },
+  { label: 'Gallery', href: gallerySectionHref },
   { label: 'Services', href: '#services' },
-  { label: 'About', href: '#about' },
   { label: 'Find salon', href: salonMapHref, external: true },
   { label: 'Contact', href: '#contact' },
 ]
@@ -48,7 +53,7 @@ const contactPhoneNumber = '201-393-0944'
 const contactPhoneHref = 'tel:2013930944'
 const contactEmail = 'info@wendyossersbeauty.com'
 const footerMenuLinks = [
-  { label: 'About Us', href: '#about' },
+  { label: 'About Us', href: heroSectionHref },
   { label: 'FAQ', href: '#contact' },
   { label: 'Online Booking', href: bookingSectionHref },
   { label: 'Contact Us', href: '#contact' },
@@ -541,7 +546,11 @@ function App() {
         )}
       </header>
 
-      <section ref={heroRef} className="relative min-h-screen overflow-hidden bg-white text-slate-900">
+      <section
+        id={heroSectionId}
+        ref={heroRef}
+        className="relative min-h-screen overflow-hidden bg-white text-slate-900"
+      >
         <div className="absolute inset-0">
           <div
             className="absolute inset-0"
@@ -589,7 +598,7 @@ function App() {
         />
 
         <section id="services" className="content-section relative bg-white py-24 sm:py-28">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-6 lg:px-8 xl:max-w-[85vw]">
             <SectionHeading title="Our Services" className="mb-10 max-w-3xl" />
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {services.map((service) => {
@@ -600,7 +609,7 @@ function App() {
                     key={service.title}
                     className={`flex h-full flex-col rounded-[5px] border p-6 shadow-[0_12px_32px_rgba(15,23,42,0.08)] transition ${
                       isSelected
-                        ? 'border-brand-gold/70 bg-brand-gold/5'
+                        ? 'border-slate-900 bg-slate-50'
                         : 'border-white bg-white'
                     }`}
                   >
@@ -618,7 +627,7 @@ function App() {
                       onClick={() => handleServiceSelection(service.title, true)}
                       className={`mt-6 inline-flex w-fit items-center justify-center rounded-[5px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
                         isSelected
-                          ? 'bg-brand-gold text-brand-charcoal hover:bg-brand-gold-soft'
+                          ? 'bg-slate-900 text-white hover:bg-slate-800'
                           : 'bg-slate-900 text-white hover:bg-slate-700'
                       }`}
                     >
@@ -638,7 +647,7 @@ function App() {
         >
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0))]" />
           <div className="mx-auto w-full px-6 lg:px-8">
-            <div className="mx-auto w-full max-w-5xl xl:max-w-[75vw]">
+            <div className="mx-auto w-full max-w-5xl xl:max-w-[85vw]">
               <div className="relative rounded-[5px] border border-slate-200 bg-white p-6 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:p-8 lg:p-10">
                 <div className="border-b border-slate-200 pb-6">
                   <SectionHeading
@@ -867,58 +876,7 @@ function App() {
           </div>
         </section>
 
-        <section
-          id="about"
-          className="content-section relative overflow-hidden bg-brand-charcoal py-24 text-white sm:py-28"
-        >
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(199,160,97,0.2),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.05),transparent_20%)]" />
-
-          <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
-            <div>
-              <SectionHeading
-                title="About the Salon"
-                light
-                className="max-w-3xl"
-                bodyClassName="max-w-3xl"
-              >
-                <p>
-                  Personalized beauty for every texture, tone, and special moment.
-                </p>
-                <p>
-                  Wendy Ossers Haus of Beauty is positioned as a high-end salon
-                  experience that stays warm and approachable. The space is designed to
-                  welcome a diverse clientele with bilingual guidance, attentive
-                  consultation, and styling that feels polished without losing
-                  individuality.
-                </p>
-              </SectionHeading>
-
-              <div className="mt-8 rounded-[5px] border border-white/10 bg-white/5 p-6">
-                <p className="font-script text-4xl text-brand-gold sm:text-5xl">Haus of Beauty</p>
-                <p className="mt-3 font-display text-3xl leading-tight text-white">
-                  Beautiful hair should feel intentional, effortless, and entirely your own.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              {features.map((feature) => (
-                <article
-                  key={feature.title}
-                  className="rounded-[5px] border border-white/10 bg-white/6 p-6"
-                >
-                  <div className="h-1 w-16 rounded-[5px] bg-brand-gold" />
-                  <h3 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-white">
-                    {feature.title}
-                  </h3>
-                  <p className="mt-4 text-[15px] leading-7 text-slate-300">
-                    {feature.description}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+      
       </main>
 
       <footer id="contact" className="content-section bg-black py-[2.8rem] text-white sm:py-[3.2rem]">
@@ -989,7 +947,7 @@ function App() {
 const GallerySection = memo(function GallerySection({ sectionRef, rows, isActive, isReady }) {
   return (
     <section
-      id="gallery"
+      id={gallerySectionId}
       ref={sectionRef}
       className="content-section gallery-section relative overflow-hidden bg-white py-24 sm:py-28"
     >
@@ -1374,7 +1332,7 @@ function shuffleArray(items) {
 
 function HeroWordmark() {
   return (
-    <a href="#" className="site-header__wordmark shrink-0">
+    <a href={heroSectionHref} className="site-header__wordmark shrink-0">
       <p className="site-header__wordmark-title text-[1.95rem] font-black uppercase tracking-[0.22em] text-slate-950 sm:text-[2.45rem]">
         Wendy Ossers
       </p>
