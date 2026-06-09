@@ -1,0 +1,4 @@
+.blur-text-segment {
+  display: inline-block;
+  will-change: transform, filter, opacity;
+}

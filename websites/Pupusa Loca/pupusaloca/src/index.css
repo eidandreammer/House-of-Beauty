@@ -1,0 +1,74 @@
+:root {
+  --blue: #0d1978;
+  --accent-blue: #3866af;
+  --yellow: #ffd24d;
+  --lavender: #8990ae;
+  --paper: #fbfbfb;
+  --text: #59606e;
+  --line: rgba(13, 25, 120, 0.16);
+  --font-body:
+    "Trebuchet MS", "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial,
+    sans-serif;
+  --font-display:
+    Impact, Haettenschweiler, "Arial Narrow Bold", "Franklin Gothic Condensed",
+    "Arial Narrow", sans-serif;
+  --font-script: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
+
+  font-family: var(--font-body);
+  color: var(--blue);
+  background: var(--paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--paper);
+}
+
+button,
+a,
+input,
+textarea,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(56, 102, 175, 0.5);
+  outline-offset: 3px;
+}
+
+img {
+  max-width: 100%;
+}
+
+p {
+  margin: 0;
+}
+
+#root {
+  min-height: 100svh;
+}

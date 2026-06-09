@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MTR">
-  <rect width="64" height="64" fill="#ffffff"/>
-  <rect x="7" y="7" width="50" height="50" fill="none" stroke="#1a1a1a" stroke-width="4"/>
-  <path d="M16 43V21h6l10 12 10-12h6v22h-6V30l-10 12-10-12v13h-6Z" fill="#1a1a1a"/>
-  <path d="M13 51h38" stroke="#d5001c" stroke-width="4"/>
-</svg>
