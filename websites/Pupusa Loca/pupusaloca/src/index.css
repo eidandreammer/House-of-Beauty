@@ -1,11 +1,14 @@
 :root {
-  --blue: #0d1978;
-  --accent-blue: #3866af;
-  --yellow: #ffd24d;
+  --blue: #06070a;
+  --accent-blue: #06070a;
+  --white: #ffffff;
+  --black: #06070a;
   --lavender: #8990ae;
-  --paper: #fbfbfb;
-  --text: #59606e;
-  --line: rgba(13, 25, 120, 0.16);
+  --paper: #ffffff;
+  --surface: #fbfbfd;
+  --text: rgba(6, 7, 10, 0.72);
+  --line: rgba(6, 7, 10, 0.16);
+  --soft-line: rgba(6, 7, 10, 0.08);
   --font-body:
     "Trebuchet MS", "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial,
     sans-serif;
@@ -15,7 +18,7 @@
   --font-script: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
 
   font-family: var(--font-body);
-  color: var(--blue);
+  color: var(--black);
   background: var(--paper);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -57,12 +60,17 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid rgba(56, 102, 175, 0.5);
+  outline: 3px solid rgba(6, 7, 10, 0.5);
   outline-offset: 3px;
 }
 
 img {
   max-width: 100%;
+}
+
+.blur-text-segment {
+  display: inline-block;
+  will-change: transform, filter, opacity;
 }
 
 p {
